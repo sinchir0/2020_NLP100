@@ -10,6 +10,8 @@ newsCorpora.columns = ['ID','TITLE','URL','PUBLISHER','CATEGORY','STORY','HOSTNA
 match_row_index = newsCorpora['PUBLISHER'].isin(['Reuters', 'Huffington Post', 'Businessweek', 'Contactmusic.com', 'Daily Mail'])
 newsCorpora_extract_by_PUBLISHER = newsCorpora[match_row_index]
 
+newsCorpora_extract_by_PUBLISHER = newsCorpora_extract_by_PUBLISHER.reset_index(drop=True)
+
 train, valid, test = train_valid_test_split(
     newsCorpora_extract_by_PUBLISHER,
     split_point=(0.8,0.1,0.1)
