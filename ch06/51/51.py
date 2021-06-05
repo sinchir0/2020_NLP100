@@ -13,8 +13,6 @@ train_idx = train.index
 valid_idx = valid.index
 test_idx = test.index
 
-import pdb; pdb.set_trace()
-
 all_text = pd.concat([train['TITLE'], valid['TITLE'], test['TITLE']], axis=0)
 
 vectorizer = CountVectorizer()
