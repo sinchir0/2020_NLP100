@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 from sklearn.utils.multiclass import unique_labels
 
+from sklearn.metrics import accuracy_score
+from sklearn.linear_model import LogisticRegression
+
 def train_valid_test_split(data, split_point: Tuple, shuffle=True):
     """pd.DataFrame()をtrain,valid,testに分割する
     Args:
@@ -89,3 +92,26 @@ def plot_confusion_matrix(y_true,y_pred,
     if save_fig:
         fig.savefig(f"{title}.png")
     return ax
+
+def make_predict_by_LR(
+    train_y,
+    valid_y,
+    test_y,
+    train_feature,
+    valid_feature,
+    test_feature,
+    C: int
+    ):
+
+    clf = LogisticRegression(solver='liblinear', C=C)
+    clf.fit(train_feature, train_y['CATEGORY'])
+    
+    train_pred = clf.predict(train_feature)
+    valid_pred = clf.predict(valid_feature)
+    test_pred = clf.predict(test_feature)
+
+    train_score = accuracy_score(train_y, train_pred)
+    valid_score = accuracy_score(valid_y, valid_pred)
+    test_score = accuracy_score(test_y, test_pred)
+    
+    return [C,train_score,valid_score,test_score]

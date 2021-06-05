@@ -1,5 +1,7 @@
 # n-gram, w2v, tf-idf, fast-text, Universal Encoder? yukiさんがatmaで使っていたやつ
 # を試してみたい。
+import  pickle
+
 import pandas as pd
 import numpy as np
 
@@ -25,3 +27,6 @@ test_feature = X.toarray()[test_idx]
 np.savetxt('train.feature.cntvec.txt', train_feature)
 np.savetxt('valid.feature.cntvec.txt', valid_feature)
 np.savetxt('test.feature.cntvec.txt', test_feature)
+
+with open("vec_dict.pkl","wb") as f:
+    pickle.dump(vectorizer.vocabulary_, f)
