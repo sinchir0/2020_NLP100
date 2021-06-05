@@ -6,12 +6,14 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 
 train = pd.read_table('../50/train.txt',index_col=0)
-valid = pd.read_table('../50/train.txt',index_col=0)
-test = pd.read_table('../50/train.txt',index_col=0)
+valid = pd.read_table('../50/valid.txt',index_col=0)
+test = pd.read_table('../50/test.txt',index_col=0)
 
 train_idx = train.index
 valid_idx = valid.index
 test_idx = test.index
+
+import pdb; pdb.set_trace()
 
 all_text = pd.concat([train['TITLE'], valid['TITLE'], test['TITLE']], axis=0)
 
