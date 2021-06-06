@@ -133,4 +133,3 @@ dmypy.json
 *.zip
 *.tsv
 *.txt
-poetry.lock
