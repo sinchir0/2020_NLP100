@@ -8,3 +8,9 @@ https://github.com/wakamezake/nlp_q100_2020
 <br>
 u++さん
 https://github.com/upura/nlp100v2020
+<br>
+taro-masudaさん
+https://github.com/taro-masuda/nlp100
+<br>
+takapy0210さん
+https://github.com/takapy0210/nlp_2020
