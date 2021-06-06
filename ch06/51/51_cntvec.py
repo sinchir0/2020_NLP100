@@ -1,32 +1,40 @@
 # n-gram, w2v, tf-idf, fast-text, Universal Encoder? yukiさんがatmaで使っていたやつ
 # を試してみたい。
+import sys
+sys.path.append('../../src')
+
 import  pickle
 
 import pandas as pd
 import numpy as np
 
-from sklearn.feature_extraction.text import CountVectorizer
+from util import load_data
+from util import preprocess
+from util import TextFeatureFitTransform
 
-train = pd.read_table('../50/train.txt',index_col=0)
-valid = pd.read_table('../50/valid.txt',index_col=0)
-test = pd.read_table('../50/test.txt',index_col=0)
+METHOD = 'cntvec'
+name_list = ['train','valid','test']
 
-train_idx = train.index
-valid_idx = valid.index
-test_idx = test.index
+# データ読み込み
+dfs = load_data()
 
-all_text = pd.concat([train['TITLE'], valid['TITLE'], test['TITLE']], axis=0)
+# 前処理
+for name in name_list:
+    dfs[name]['TITLE'] = dfs[name][['TITLE']].apply(preprocess)
 
-vectorizer = CountVectorizer()
-X = vectorizer.fit_transform(all_text)
+# 特徴量学習
+feat = TextFeatureFitTransform(method=METHOD)
+feat.fit(dfs['train']['TITLE'])
 
-train_feature = X.toarray()[train_idx]
-valid_feature = X.toarray()[valid_idx]
-test_feature = X.toarray()[test_idx]
+# 特徴量生成
+result_dfs = {}
+for name in name_list:
+    result_dfs[name] = feat.transform(dfs[name]['TITLE'])
 
-np.savetxt('train.feature.cntvec.txt', train_feature)
-np.savetxt('valid.feature.cntvec.txt', valid_feature)
-np.savetxt('test.feature.cntvec.txt', test_feature)
+# 特徴量保存
+for name in name_list:
+    np.savetxt(f'{name}.feature.{METHOD}.txt', result_dfs[name].toarray())
 
-with open("vec_dict.pkl","wb") as f:
-    pickle.dump(vectorizer.vocabulary_, f)
+# 推論時にも使用するため、保存
+with open(f"{METHOD}_vec_dict.pkl","wb") as f:
+    pickle.dump(feat.vec.vocabulary_, f)

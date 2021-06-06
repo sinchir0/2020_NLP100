@@ -2,8 +2,6 @@ import pickle
 
 import numpy as np
 
-from sklearn.linear_model import LogisticRegression
-
 with open('../52/LR_with_cnt_feat.pickle', mode='rb') as fp:
     clf = pickle.load(fp)
 

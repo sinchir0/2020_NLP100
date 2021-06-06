@@ -1,15 +1,19 @@
 from typing import Tuple
 
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
 from sklearn.metrics import confusion_matrix
-from sklearn.utils.multiclass import unique_labels
-
 from sklearn.metrics import accuracy_score
+from sklearn.utils.multiclass import unique_labels
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 
-def train_valid_test_split(data, split_point: Tuple, shuffle=True):
+import texthero as hero
+
+def train_valid_test_split(data, split_point: Tuple, shuffle=False):
     """pd.DataFrame()をtrain,valid,testに分割する
     Args:
         data: pd.DataFrame()のデータ
@@ -29,8 +33,8 @@ def train_valid_test_split(data, split_point: Tuple, shuffle=True):
     third = int(data_len*split_point[2])
 
     train = data[:first]
-    valid = data[first:(first+second)]
-    test = data[(first+second):(first+second+third)]
+    valid = data[first:(first + second)]
+    test = data[(first + second):(first + second + third)]
 
     return train, valid, test
 
@@ -115,3 +119,54 @@ def make_predict_by_LR(
     test_score = accuracy_score(test_y, test_pred)
     
     return [C,train_score,valid_score,test_score]
+
+# 引用：https://github.com/takapy0210/nlp_2020/blob/master/chapter6/ans_51.py
+def load_data(data_check=False) -> dict:
+    """データの読み込み"""
+    # 読み込むファイルを定義
+    inputs = {
+        'train': '../50/train.txt',
+        'valid': '../50/valid.txt',
+        'test': '../50/test.txt',
+    }
+
+    dfs = {}
+    for k, v in inputs.items():
+        dfs[k] = pd.read_csv(v, sep='\t', index_col=0)
+
+    # データチェック
+    if data_check:
+        for k in inputs.keys():
+            print(k, '---', dfs[k].shape)
+            print(dfs[k].head())
+
+    return dfs
+
+def preprocess(text) -> str:
+    """前処理"""
+    clean_text = hero.clean(text, pipeline=[
+        hero.preprocessing.fillna,
+        hero.preprocessing.lowercase,
+        hero.preprocessing.remove_digits,
+        hero.preprocessing.remove_punctuation,
+        hero.preprocessing.remove_diacritics,
+        hero.preprocessing.remove_stopwords
+    ])
+
+    return clean_text
+
+class TextFeatureFitTransform():
+    '''テキストから特徴量を学習し、生成'''
+    def __init__(self, method: str) -> None:
+        if method == 'cntvec':
+            self.vec = CountVectorizer()
+        elif method == 'tfidf':
+            self.vec = TfidfVectorizer(ngram_range=(1, 2))
+        else:
+            raise ValueError("No method")
+
+    def fit(self, input_text) -> None:
+        self.vec.fit(input_text)
+
+    def transform(self, input_text) -> pd.DataFrame:
+        return self.vec.transform(input_text)

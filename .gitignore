@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# remove data
+*.csv
+*.zip
+*.tsv
+*.txt
+poetry.lock

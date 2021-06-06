@@ -27,3 +27,21 @@ print('valid_number_per_category')
 print(valid['CATEGORY'].value_counts())
 print('test_number_per_category')
 print(test['CATEGORY'].value_counts())
+# train_number_per_category
+# b    4473
+# e    4271
+# t    1201
+# m     727
+# Name: CATEGORY, dtype: int64
+# valid_number_per_category
+# e    569
+# b    553
+# t    127
+# m     85
+# Name: CATEGORY, dtype: int64
+# test_number_per_category
+# b    601
+# e    439
+# t    196
+# m     98
+# Name: CATEGORY, dtype: int6

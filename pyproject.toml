@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "2020_nlp100"
+version = "0.1.0"
+description = ""
+authors = ["sinchir0"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+sklearn = "^0.0"
+pandas = "^1.2.4"
+ipdb = "^0.13.9"
+matplotlib = "^3.4.2"
+texthero = "^1.0.9"
+gensim = "<=3.8.3"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

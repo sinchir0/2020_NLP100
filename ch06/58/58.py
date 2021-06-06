@@ -37,6 +37,8 @@ result_df.columns = ['train','valid','test']
 result_df.plot()
 
 plt.title('CountVectorizer LR')
+
+plt.title('CountVectorizer LR')
 plt.xlabel('c')
 plt.ylabel('Accuracy')
 plt.savefig('result.png')
