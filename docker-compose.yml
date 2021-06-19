@@ -1,0 +1,17 @@
+version: "3"
+services:
+  app: #名前はなんでも良い
+    build: .
+    volumes: # PWD、docker-composeを行うフォルダを、そのままworkingの配下にmountする。
+      - $PWD:/working
+    container_name: nlp
+    working_dir: /working # working配下に一番最初にいるようにする。
+    ports:
+      - 8000:8000 # Dockerfileでcurlをする際に必要。
+    #environment:
+    #  - PYTHONPATH=/working
+    # docker run -itをつけるのと同じ意味
+    # -i : stdin, 入力チャネルを開く
+    # -t : 出力をprettyに表示する。
+    tty: true 
+    
