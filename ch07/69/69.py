@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from sklearn.manifold import TSNE
+from adjustText import adjust_text
 
 if __name__ == "__main__":
 
@@ -23,8 +24,15 @@ if __name__ == "__main__":
     country_embedded = tsne.fit_transform(country_vec_arr)
 
     # 可視化
-    for idx in range(len(countries_list)):
-        plt.text(country_embedded[idx,0],country_embedded[idx,1], countries_list[idx])
+    plt.scatter(country_embedded[:,0], country_embedded[:,1])
 
-    # plt.savefig('tsne.png', bbox_inches='tight')
-    plt.savefig('tsne.png')
+    texts = [plt.text(
+        country_embedded[i,0],
+        country_embedded[i,1],
+        countries_list[i],
+        fontsize=6
+        ) for i in range(len(countries_list))]
+
+    adjust_text(texts)    
+
+    plt.savefig('tsne.png', bbox_inches='tight', dpi=300)
