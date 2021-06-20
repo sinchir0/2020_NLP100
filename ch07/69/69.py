@@ -9,14 +9,30 @@ import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
 from adjustText import adjust_text
 
+class Data:
+    
+    def __init__(self):
+        pass
+
+    def load_country_vec(self):
+        return np.load('../67/country_vec_arr.npy')
+    
+    def load_countries_list(self):
+        return pickle.load(open('../67/countries_list.txt', 'rb'))
+
 if __name__ == "__main__":
 
-    # 国名に関する単語ベクトル
-    country_vec_arr = np.load('../67/country_vec_arr.npy')
+    # # 国名に関する単語ベクトル
+    # country_vec_arr = np.load('../67/country_vec_arr.npy')
 
-    # 国名のlist
-    with open('../67/countries_list.txt', "rb") as f:
-        countries_list = pickle.load(f)
+    # # 国名のlist
+    # with open('../67/countries_list.txt', "rb") as f:
+    #     countries_list = pickle.load(f)
+
+    # データの読み込み
+    data = Data()
+    country_vec_arr = data.load_country_vec()
+    countries_list = data.load_countries_list()
 
     # tsneの実施
     tsne = TSNE(n_components=2, random_state = 33)
