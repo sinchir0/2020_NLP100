@@ -19,7 +19,7 @@ def get_country_name(questions_words: list, category_name: str) -> list:
         list: 国名のリスト
     """
 
-    countries_dep_list = []
+    countries_set = set()
 
     for line in questions_words:
         if line.startswith(f": {category_name}"):
@@ -30,13 +30,13 @@ def get_country_name(questions_words: list, category_name: str) -> list:
             if ctg == category_name:
                 country_1 = line.split(' ')[1]
                 country_3 = line.split(' ')[3].replace('\n','')
-                countries_dep_list.append(country_1)
-                countries_dep_list.append(country_3)
+                countries_set.add(country_1)
+                countries_set.add(country_3)
             elif ctg == "others":
                 continue
 
-    # 重複なしでの国名を取得
-    countries_list = list(set(countries_dep_list))
+    # 国名のlist
+    countries_list = list(countries_set)
 
     return countries_list
 
@@ -50,26 +50,21 @@ if __name__ == "__main__":
     common_countries_list = get_country_name(questions_words, "capital-common-countries")
     world_countries_list = get_country_name(questions_words, "capital-world")
 
-    # 国名を一つのlistにまとめる
-    countries_list = list(set(common_countries_list) | set(world_countries_list))
-
-    # 重複をなくす, ここら辺の書き方は微妙だと思う
-    countries_list = list(set(countries_list))
-
-    # 保存
-    with open('countries_list.txt', "wb") as f:
-        pickle.dump(countries_list, f)
+    # 重複を無くした国名を一つのlistにまとめる
+    countries_list = list(set(common_countries_list + world_countries_list))
 
     # 国名のvectorを取得
-    vec_list = []
-    for country in countries_list:
-        country_vec = model[country]
-        vec_list.append(country_vec)
+    vec_list = [model[country] for country in countries_list]
     
     # kmeansの実施
     country_vec_arr = np.array(vec_list)
-    np.save('country_vec_arr', country_vec_arr)
     kmeans = KMeans(n_clusters=5, random_state=33).fit(country_vec_arr)
+
+    # 保存
+    np.save('country_vec_arr', country_vec_arr)
+
+    with open('countries_list.txt', "wb") as f:
+        pickle.dump(countries_list, f)
 
     # 見やすく表示
     print(

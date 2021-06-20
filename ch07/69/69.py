@@ -22,13 +22,6 @@ class Data:
 
 if __name__ == "__main__":
 
-    # # 国名に関する単語ベクトル
-    # country_vec_arr = np.load('../67/country_vec_arr.npy')
-
-    # # 国名のlist
-    # with open('../67/countries_list.txt', "rb") as f:
-    #     countries_list = pickle.load(f)
-
     # データの読み込み
     data = Data()
     country_vec_arr = data.load_country_vec()

@@ -37,11 +37,13 @@ if __name__ == "__main__":
 
     start = time.time()
 
+    # データの読み込み
     model = gensim.models.KeyedVectors.load_word2vec_format('../60/GoogleNews-vectors-negative300.bin', binary=True)
 
     with open('questions-words_dummy.txt') as f:
         questions_words = f.readlines()
 
+    # 引数をまとめる
     input_data_list = [(model,line) for line in questions_words]
 
     # import ipdb; ipdb.set_trace()
