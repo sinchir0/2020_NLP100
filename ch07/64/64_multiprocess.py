@@ -35,8 +35,6 @@ def get_most_similar(input_data) -> str:
 
 if __name__ == "__main__":
 
-    import ipdb; ipdb.set_trace()
-
     start = time.time()
 
     # データの読み込み
@@ -47,8 +45,6 @@ if __name__ == "__main__":
 
     # 引数をまとめる
     input_data_list = [(model,line) for line in questions_words]
-
-    import ipdb; ipdb.set_trace()
 
     with Pool(4) as p:
         result_list = p.map(get_most_similar, input_data_list)
