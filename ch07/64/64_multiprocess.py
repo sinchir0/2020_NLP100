@@ -16,7 +16,7 @@ def get_most_similar(input_data) -> str:
     '''questions-wordsのデータから、類似単語と類似度を計算する'''
 
     # 引数を分ける
-    # model, line = input_data
+    model, line = input_data
     
     # 最初の単語が:だった場合は\nだけ削除して返す。
     first_word = line.split(' ')[0]
@@ -34,6 +34,8 @@ def get_most_similar(input_data) -> str:
     return line_add_result
 
 if __name__ == "__main__":
+
+    import ipdb; ipdb.set_trace()
 
     start = time.time()
 
