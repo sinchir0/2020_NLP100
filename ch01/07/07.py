@@ -4,4 +4,5 @@
 def make_sentece_from_template(x, y, z):
     return f'{x}時の{y}は{z}'
 
-print(make_sentece_from_template(12, '気温', 22.4))
+if __name__ == "__main__":
+    print(make_sentece_from_template(12, '気温', 22.4))

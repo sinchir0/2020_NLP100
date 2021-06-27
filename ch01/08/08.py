@@ -4,7 +4,16 @@
 # その他の文字はそのまま出力
 # この関数を用い，英語のメッセージを暗号化・復号化せよ．
 
-def cipher(text:str) -> str:
-    return [char if (char.isalpha()) & (char.islower()) else char for char in text.replace(' ','')]
+import re
 
-print(cipher('I am an NLPer'))
+def cipher(text: str) -> str:
+    return [chr(219 - ord(char)) if (re.match(r"[a-z]", char)) else char for char in text]
+
+if __name__ == "__main__":
+    raw_text = 'I am an NLPer'
+    encypted = ''.join(cipher(raw_text))
+    dencypted = ''.join(cipher(encypted))
+
+    print(raw_text)
+    print(encypted)
+    print(dencypted)

@@ -3,4 +3,4 @@
 
 sentence = 'Now I need a drink, alcoholic of course, after the heavy lectures involving quantum mechanics.'
 
-print([len(word) for word in sentence.split(' ')])
+print([len(word.strip(",.")) for word in sentence.split(' ')])
