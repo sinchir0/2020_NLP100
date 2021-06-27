@@ -6,13 +6,17 @@
 
 import re
 
+
 def cipher(text: str) -> str:
-    return [chr(219 - ord(char)) if (re.match(r"[a-z]", char)) else char for char in text]
+    return [
+        chr(219 - ord(char)) if (re.match(r"[a-z]", char)) else char for char in text
+    ]
+
 
 if __name__ == "__main__":
-    raw_text = 'I am an NLPer'
-    encypted = ''.join(cipher(raw_text))
-    dencypted = ''.join(cipher(encypted))
+    raw_text = "I am an NLPer"
+    encypted = "".join(cipher(raw_text))
+    dencypted = "".join(cipher(encypted))
 
     print(raw_text)
     print(encypted)

@@ -3,22 +3,22 @@
 
 import pickle
 
-import numpy as np
 import matplotlib.pyplot as plt
-
-from sklearn.manifold import TSNE
+import numpy as np
 from adjustText import adjust_text
+from sklearn.manifold import TSNE
+
 
 class Data:
-    
     def __init__(self):
         pass
 
     def load_country_vec(self):
-        return np.load('../67/country_vec_arr.npy')
-    
+        return np.load("../67/country_vec_arr.npy")
+
     def load_countries_list(self):
-        return pickle.load(open('../67/countries_list.txt', 'rb'))
+        return pickle.load(open("../67/countries_list.txt", "rb"))
+
 
 if __name__ == "__main__":
 
@@ -28,20 +28,23 @@ if __name__ == "__main__":
     countries_list = data.load_countries_list()
 
     # tsneの実施
-    tsne = TSNE(n_components=2, random_state = 33)
+    tsne = TSNE(n_components=2, random_state=33)
 
     country_embedded = tsne.fit_transform(country_vec_arr)
 
     # 可視化
-    plt.scatter(country_embedded[:,0], country_embedded[:,1])
+    plt.scatter(country_embedded[:, 0], country_embedded[:, 1])
 
-    texts = [plt.text(
-        country_embedded[i,0],
-        country_embedded[i,1],
-        countries_list[i],
-        fontsize=6
-        ) for i in range(len(countries_list))]
+    texts = [
+        plt.text(
+            country_embedded[i, 0],
+            country_embedded[i, 1],
+            countries_list[i],
+            fontsize=6,
+        )
+        for i in range(len(countries_list))
+    ]
 
-    adjust_text(texts)    
+    adjust_text(texts)
 
-    plt.savefig('tsne.png', bbox_inches='tight', dpi=300)
+    plt.savefig("tsne.png", bbox_inches="tight", dpi=300)

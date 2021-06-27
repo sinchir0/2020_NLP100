@@ -1,14 +1,17 @@
 # 62. 類似度の高い単語10件
 # “United States”とコサイン類似度が高い10語と，その類似度を出力せよ．
 
-import gensim
 from pprint import pprint
+
+import gensim
 
 if __name__ == "__main__":
     # modelのload
-    model = gensim.models.KeyedVectors.load_word2vec_format('../60/GoogleNews-vectors-negative300.bin', binary=True)
-    
-    pprint(model.most_similar('United_States', topn=10))
+    model = gensim.models.KeyedVectors.load_word2vec_format(
+        "../60/GoogleNews-vectors-negative300.bin", binary=True
+    )
+
+    pprint(model.most_similar("United_States", topn=10))
     # [('Unites_States', 0.7877248525619507),
     # ('Untied_States', 0.7541370391845703),
     # ('United_Sates', 0.74007248878479),
