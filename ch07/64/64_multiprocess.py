@@ -1,5 +1,3 @@
-# 注：このコードは動きません
-
 # 64. アナロジーデータでの実験
 # 単語アナロジーの評価データをダウンロードし，vec(2列目の単語) - vec(1列目の単語) + vec(3列目の単語)を計算し，そのベクトルと類似度が最も高い単語と，その類似度を求めよ．求めた単語と類似度は，各事例の末尾に追記せよ．
 
@@ -12,11 +10,14 @@ from multiprocessing import Process, Manager
 
 import gensim
 
-def get_most_similar(input_data) -> str:
-    '''questions-wordsのデータから、類似単語と類似度を計算する'''
+# global変数化
+model = gensim.models.KeyedVectors.load_word2vec_format('../60/GoogleNews-vectors-negative300.bin', binary=True)
 
-    # 引数を分ける
-    model, line = input_data
+# 事前正規化
+model.init_sims(replace=True)
+
+def get_most_similar(line: str) -> str:
+    '''questions-wordsのデータから、類似単語と類似度を計算する'''
     
     # 最初の単語が:だった場合は\nだけ削除して返す。
     first_word = line.split(' ')[0]
@@ -37,17 +38,11 @@ if __name__ == "__main__":
 
     start = time.time()
 
-    # データの読み込み
-    model = gensim.models.KeyedVectors.load_word2vec_format('../60/GoogleNews-vectors-negative300.bin', binary=True)
-
     with open('questions-words_dummy.txt') as f:
         questions_words = f.readlines()
 
-    # 引数をまとめる
-    input_data_list = [(model,line) for line in questions_words]
-
     with Pool(4) as p:
-        result_list = p.map(get_most_similar, input_data_list)
+        result_list = p.map(get_most_similar, questions_words)
 
     join_result = '\n'.join(result_list)
 
@@ -58,3 +53,5 @@ if __name__ == "__main__":
     print (f"elapsed_time: {elapsed_time: .2f}[sec]")
     # 普通にやった場合
     # elapsed_time: 22.35[sec]
+    # multi processでやった場合
+    # elapsed_time: 90.86[sec]
