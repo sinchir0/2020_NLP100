@@ -13,4 +13,8 @@ if __name__ == "__main__":
 
     col1_col2_merge = [col1.replace('\n','') + '\t' + col2.replace('\n','') for col1, col2 in zip(col1,col2)]
 
-    print(col1_col2_merge)
+    with open("col1_col2_merge.txt", "w") as f:
+        f.write("\n".join(col1_col2_merge))
+
+    # UNIXコマンド
+    # paste col1_col2_merge.txt
