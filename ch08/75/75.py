@@ -19,7 +19,7 @@ def calc_acc(y_pred_prob, y_true) -> float:
 
 def make_graph(value_dict: dict, value_name: str) -> None:
     '''value_dictに関するgraphを生成し、保存する。'''
-    for phase in ['train','test']:
+    for phase in ['train','valid']:
         plt.plot(value_dict[phase],label=phase)
     plt.xlabel('epoch')
     plt.ylabel(value_name)
@@ -41,14 +41,14 @@ if __name__ == "__main__":
         np.load('../70/train_label.npy')
         )
 
-    # 評価データの読み込み
-    test_x = torch.tensor(
-        np.load('../70/test_vector.npy'),
+    # 検証データの読み込み
+    valid_x = torch.tensor(
+        np.load('../70/valid_vector.npy'),
         requires_grad=True
         )
 
-    test_y = torch.tensor(
-        np.load('../70/test_label.npy')
+    valid_y = torch.tensor(
+        np.load('../70/valid_label.npy')
         )
 
     # modelの設定
@@ -60,8 +60,8 @@ if __name__ == "__main__":
 
     train_losses = []
     train_accs = []
-    test_losses = []
-    test_accs = []
+    valid_losses = []
+    valid_accs = []
 
     # parameterの更新    
     for step in range(100):
@@ -84,27 +84,27 @@ if __name__ == "__main__":
         train_accs.append(train_acc)
         
         # 検証データに対する予測
-        test_y_pred_prob = net(test_x)
+        valid_y_pred_prob = net(valid_x)
 
         # 検証データの損失の計算
-        test_loss = loss(test_y_pred_prob, test_y)
+        valid_loss = loss(valid_y_pred_prob, valid_y)
         # 検証データでの損失の保存
-        test_losses.append(test_loss.data)
+        valid_losses.append(valid_loss.data)
 
         # 検証データでの正解率の計算
-        test_acc = calc_acc(test_y_pred_prob, test_y)
+        valid_acc = calc_acc(valid_y_pred_prob, valid_y)
         # 検証データでの正解率の保存
-        test_accs.append(test_acc)
+        valid_accs.append(valid_acc)
 
     # グラフへのプロット
     losses = {
         'train': train_losses,
-        'test': test_losses
+        'valid': valid_losses
         }
 
     accs = {
         'train': train_accs,
-        'test': test_accs
+        'valid': valid_accs
     }
 
     make_graph(losses, 'losses')
