@@ -11,7 +11,10 @@ if __name__ == "__main__":
     with open("../12/col2.txt") as f:
         col2 = f.readlines()
 
-    col1_col2_merge = [col1.replace('\n','') + '\t' + col2.replace('\n','') for col1, col2 in zip(col1,col2)]
+    col1_col2_merge = [
+        col1.replace("\n", "") + "\t" + col2.replace("\n", "")
+        for col1, col2 in zip(col1, col2)
+    ]
 
     with open("col1_col2_merge.txt", "w") as f:
         f.write("\n".join(col1_col2_merge))

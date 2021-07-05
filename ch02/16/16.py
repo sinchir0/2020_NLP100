@@ -13,7 +13,7 @@ if __name__ == "__main__":
     split_point = int(len(col1_col2_merge) / N)
 
     for num in range(0, split_point, N):
-        print("".join(col1_col2_merge[num:num+N]))
+        print("".join(col1_col2_merge[num : num + N]))
         print("---------------------------------")
 
     # split -l 10 ../13/col1_col2_merge.txt

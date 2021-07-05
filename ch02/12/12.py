@@ -7,8 +7,8 @@ if __name__ == "__main__":
     with open("../10/popular-names.txt") as f:
         popular_names = f.readlines()
 
-    popular_names_txt1 = [text.split('\t')[0] for text in popular_names]
-    popular_names_txt2 = [text.split('\t')[1] for text in popular_names]
+    popular_names_txt1 = [text.split("\t")[0] for text in popular_names]
+    popular_names_txt2 = [text.split("\t")[1] for text in popular_names]
 
     with open("col1.txt", "w") as f:
         f.write("\n".join(popular_names_txt1))
