@@ -18,6 +18,10 @@ tqdm = "^4.61.1"
 scipy = "^1.6.3"
 adjustText = "^0.7.3"
 jedi = "^0.18.0"
+torch = "^1.9.0"
+
+[tool.poetry.scripts]
+util = "NLP100.util:main"
 
 [tool.poetry.dev-dependencies]
 pysen = {version = "^0.9.1", extras = ["lint"]}
