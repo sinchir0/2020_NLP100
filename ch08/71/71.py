@@ -30,7 +30,3 @@ if __name__ == "__main__":
     #     [0.0869, 0.3767, 0.2606, 0.2759]])
 
     torch.save(output, "71.pt")
-
-    assert torch.equal(
-        net.fc(torch.zeros_like(x_train)), torch.zeros(x_train.shape[0], 4)
-    )
