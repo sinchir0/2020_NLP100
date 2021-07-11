@@ -2,14 +2,15 @@
 # 問題78のコードを改変し，バイアス項の導入や多層化など，ニューラルネットワークの形状を変更しながら，高性能なカテゴリ分類器を構築せよ．
 
 import time
-from tqdm import tqdm
 from typing import Union
 
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from torch import nn
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader, Dataset
+from tqdm import tqdm
+
 
 class TextDataset(Dataset):
     def __init__(self, X, y):
@@ -21,6 +22,7 @@ class TextDataset(Dataset):
 
     def __getitem__(self, idx):
         return self.X[idx], self.y[idx]
+
 
 class Net(nn.Module):
     def __init__(self, in_shape: int, out_shape: int):
@@ -51,6 +53,7 @@ class Net(nn.Module):
 
         return x
 
+
 def train_fn(model, loader, optimizer, loss) -> Union[float, float]:
     """model, loaderを用いて学習を行い、lossを返す"""
     train_running_loss = 0.0
@@ -73,6 +76,7 @@ def train_fn(model, loader, optimizer, loss) -> Union[float, float]:
 
     return train_running_loss, valid_running_loss
 
+
 def calc_acc(model, train_x, y_true) -> float:
     """modelと学習データ、正解データを用いて、正解率を計算する"""
     # 最も正解率の高い予測確率を正解ラベルとする。
@@ -83,6 +87,7 @@ def calc_acc(model, train_x, y_true) -> float:
     total_size = y_true.size(0)
     acc = (correct_num / total_size) * 100
     return acc
+
 
 def make_graph(value_dict: dict, value_name: str, method: str) -> None:
     """value_dictに関するgraphを生成し、保存する。"""
@@ -95,23 +100,30 @@ def make_graph(value_dict: dict, value_name: str, method: str) -> None:
     plt.savefig(f"{method}_{value_name}.png")
     plt.close()
 
+
 if __name__ == "__main__":
 
     METHOD = "three_layer_linear_dropout_bn"
 
     if not torch.cuda.is_available():
-        print('No cuda')
+        print("No cuda")
 
-    PATH = '..'
+    PATH = ".."
 
-    device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
+    device = (
+        torch.device("cuda:0") if torch.cuda.is_available() else torch.device("cpu")
+    )
 
     # 学習データの読み込み
-    train_x = torch.tensor(np.load(f"{PATH}/70/train_vector.npy"), requires_grad=True).to(device)
+    train_x = torch.tensor(
+        np.load(f"{PATH}/70/train_vector.npy"), requires_grad=True
+    ).to(device)
     train_y = torch.tensor(np.load(f"{PATH}/70/train_label.npy")).to(device)
 
     # 評価データの読み込み
-    valid_x = torch.tensor(np.load(f"{PATH}/70/valid_vector.npy"), requires_grad=True).to(device)
+    valid_x = torch.tensor(
+        np.load(f"{PATH}/70/valid_vector.npy"), requires_grad=True
+    ).to(device)
     valid_y = torch.tensor(np.load(f"{PATH}/70/valid_label.npy")).to(device)
 
     # modelの設定
@@ -137,7 +149,9 @@ if __name__ == "__main__":
     for epoch in tqdm(range(EPOCH)):
 
         # 学習
-        train_running_loss, valid_running_loss = train_fn(model, loader, optimizer, loss)
+        train_running_loss, valid_running_loss = train_fn(
+            model, loader, optimizer, loss
+        )
 
         # 訓練データでの損失の保存
         train_losses.append(train_running_loss)
@@ -170,8 +184,8 @@ if __name__ == "__main__":
 
     make_graph(losses, "losses", METHOD)
     make_graph(accs, "accs", METHOD)
-    
-    print(f'train_acc: {train_acc}')
-    print(f'valid_acc: {valid_acc}')
+
+    print(f"train_acc: {train_acc}")
+    print(f"valid_acc: {valid_acc}")
     # train_acc: 83.33958020989505
     # valid_acc: 84.25787106446776
