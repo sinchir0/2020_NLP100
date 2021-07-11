@@ -169,4 +169,4 @@ def clean_text(text: str) -> str:
     text = normalize_unicodedata(text)
     text = normalize_neologdn(text)
     text = normalize_number(text)
-    return textsrc
+    return text
