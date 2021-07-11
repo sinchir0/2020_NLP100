@@ -14,4 +14,3 @@ services:
     # -i : stdin, 入力チャネルを開く
     # -t : 出力をprettyに表示する。
     tty: true 
-    

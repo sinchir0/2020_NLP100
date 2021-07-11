@@ -3,11 +3,11 @@
 
 import pickle
 
-import pandas as pd
-import numpy as np
-
 import gensim
+import numpy as np
+import pandas as pd
 from sklearn.cluster import KMeans
+
 
 def get_country_name(questions_words: list, category_name: str) -> list:
     """重複ありでの国名をquestions-wordsの: capital-common-countries, 1,3列目から取得
@@ -28,8 +28,8 @@ def get_country_name(questions_words: list, category_name: str) -> list:
             ctg = "others"
         else:
             if ctg == category_name:
-                country_1 = line.split(' ')[1]
-                country_3 = line.split(' ')[3].replace('\n','')
+                country_1 = line.split(" ")[1]
+                country_3 = line.split(" ")[3].replace("\n", "")
                 countries_set.add(country_1)
                 countries_set.add(country_3)
             elif ctg == "others":
@@ -40,14 +40,19 @@ def get_country_name(questions_words: list, category_name: str) -> list:
 
     return countries_list
 
-if __name__ == "__main__":
-    model = gensim.models.KeyedVectors.load_word2vec_format('../60/GoogleNews-vectors-negative300.bin', binary=True)
 
-    with open('../64/questions-words.txt') as f:
+if __name__ == "__main__":
+    model = gensim.models.KeyedVectors.load_word2vec_format(
+        "../60/GoogleNews-vectors-negative300.bin", binary=True
+    )
+
+    with open("../64/questions-words.txt") as f:
         questions_words = f.readlines()
 
     # 「capital-common-countries」「capital-world」の区切りから国名を取得
-    common_countries_list = get_country_name(questions_words, "capital-common-countries")
+    common_countries_list = get_country_name(
+        questions_words, "capital-common-countries"
+    )
     world_countries_list = get_country_name(questions_words, "capital-world")
 
     # 重複を無くした国名を一つのlistにまとめる
@@ -55,24 +60,23 @@ if __name__ == "__main__":
 
     # 国名のvectorを取得
     vec_list = [model[country] for country in countries_list]
-    
+
     # kmeansの実施
     country_vec_arr = np.array(vec_list)
     kmeans = KMeans(n_clusters=5, random_state=33).fit(country_vec_arr)
 
     # 保存
-    np.save('country_vec_arr', country_vec_arr)
+    np.save("country_vec_arr", country_vec_arr)
 
-    with open('countries_list.txt', "wb") as f:
+    with open("countries_list.txt", "wb") as f:
         pickle.dump(countries_list, f)
 
     # 見やすく表示
     print(
-        pd.DataFrame(
-            {'label':kmeans.labels_,
-             'coutry':countries_list})
-            .sort_values('label')
-            )
+        pd.DataFrame({"label": kmeans.labels_, "coutry": countries_list}).sort_values(
+            "label"
+        )
+    )
 
 #     label       coutry
 # 87      0      Algeria
