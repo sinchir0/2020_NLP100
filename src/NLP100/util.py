@@ -1,5 +1,6 @@
 from typing import Tuple
 
+import gensim
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -8,8 +9,6 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.utils.multiclass import unique_labels
-
-import gensim
 
 
 def train_valid_test_split(data, split_point: Tuple, shuffle=False):

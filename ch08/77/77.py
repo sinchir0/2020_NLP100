@@ -2,17 +2,39 @@
 
 import time
 
-from tqdm import tqdm
-
-import numpy as np
 import matplotlib.pyplot as plt
-
+import numpy as np
 import torch
 from torch import nn
-from torch.utils.data import TensorDataset, DataLoader
+from torch.utils.data import DataLoader, Dataset
+
+
+class TextDataset(Dataset):
+    def __init__(self, X, y):
+        self.X = X
+        self.y = y
+
+    def __len__(self):
+        return len(self.X)
+
+    def __getitem__(self, idx):
+        return self.X[idx], self.y[idx]
+
+
+class Net(nn.Module):
+    def __init__(self, in_shape: int, out_shape: int):
+        super().__init__()
+        self.fc = nn.Linear(300, 4, bias=True)
+        self.softmax = nn.Softmax(dim=1)
+
+    def forward(self, x):
+        x = self.fc(x)
+        x = self.softmax(x)
+        return x
+
 
 def calc_acc(net, train_x, y_true) -> float:
-    '''modelと学習データ、正解データを用いて、正解率を計算する'''
+    """modelと学習データ、正解データを用いて、正解率を計算する"""
     # 最も正解率の高い予測確率を正解ラベルとする。
     _, y_pred = torch.max(net(train_x), 1)
 
@@ -22,52 +44,29 @@ def calc_acc(net, train_x, y_true) -> float:
     acc = (correct_num / total_size) * 100
     return acc
 
-def make_graph(value_dict: dict, value_name: str) -> None:
-    '''value_dictに関するgraphを生成し、保存する。'''
-    for phase in ['train','valid']:
-        plt.plot(value_dict[phase],label=phase)
-    plt.xlabel('epoch')
-    plt.ylabel(value_name)
-    plt.title(f'{value_name} per epoch')
-    plt.legend()
-    plt.savefig(f'{value_name}.png')
-    # plt.showしないとだめ？
-    plt.show()
 
 if __name__ == "__main__":
 
     # 学習データの読み込み
-    train_x = torch.tensor(
-        np.load('../70/train_vector.npy'),
-        requires_grad=True
-        )
-
-    train_y = torch.tensor(
-        np.load('../70/train_label.npy')
-        )
+    train_x = torch.tensor(np.load("../70/train_vector.npy"), requires_grad=True)
+    train_y = torch.tensor(np.load("../70/train_label.npy"))
 
     # 評価データの読み込み
-    valid_x = torch.tensor(
-        np.load('../70/valid_vector.npy'),
-        requires_grad=True
-        )
-
-    valid_y = torch.tensor(
-        np.load('../70/valid_label.npy')
-        )
+    valid_x = torch.tensor(np.load("../70/valid_vector.npy"), requires_grad=True)
+    valid_y = torch.tensor(np.load("../70/valid_label.npy"))
 
     # modelの設定
-    net = nn.Linear(300, 4)
+    net = Net(in_shape=train_x.shape[1], out_shape=4)
 
     # loss, optimizerの設定
     loss = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=0.01)
 
     # DataLoaderの構築
-    dataset = TensorDataset(train_x, train_y)
+    dataset = TextDataset(train_x, train_y)
 
     # parameterの更新
-    batchsizes = [1,2,4,8,16,32,64,128]
+    batchsizes = [1, 2, 4, 8, 16, 32, 64, 128]
     for batchsize in batchsizes:
         loader = DataLoader(dataset, batch_size=batchsize, shuffle=True)
 
@@ -84,12 +83,12 @@ if __name__ == "__main__":
             valid_running_loss = 0.0
 
             for dataloader_x, dataloader_y in loader:
-                '''netの重みの学習をbatchsize単位で行う'''
-            
+                """netの重みの学習をbatchsize単位で行う"""
+
                 optimizer.zero_grad()
 
                 dataloader_y_pred_prob = net(dataloader_x)
-                
+
                 # dataset_xでの損失の計算
                 dataloader_loss = loss(dataloader_y_pred_prob, dataloader_y)
                 dataloader_loss.backward()
@@ -118,12 +117,15 @@ if __name__ == "__main__":
 
             # 20epoch毎にチェックポイントを生成
             if epoch % 20 == 0:
-                torch.save(net.state_dict(), f'77_net_bs{batchsize}_epoch{epoch}.pth')
-                torch.save(optimizer.state_dict(), f'77_optimizer_bs{batchsize}_epoch{epoch}.pth')
+                torch.save(net.state_dict(), f"77_net_bs{batchsize}_epoch{epoch}.pth")
+                torch.save(
+                    optimizer.state_dict(),
+                    f"77_optimizer_bs{batchsize}_epoch{epoch}.pth",
+                )
 
             # 経過した時間を取得
             elapsed_time = time.time() - start
-            print(f'batchsize{batchsize} time:{elapsed_time: .2f}')
+            print(f"batchsize{batchsize} time:{elapsed_time: .2f}")
 
             # batchsize1 time: 20.91
             # batchsize2 time: 26.53

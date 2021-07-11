@@ -7,7 +7,6 @@ sys.path.append("../../src")
 import pickle
 
 import numpy as np
-import pandas as pd
 from util import TextFeatureFitTransform, load_data, preprocess
 
 METHOD = "cntvec"

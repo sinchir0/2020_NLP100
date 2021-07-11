@@ -9,28 +9,18 @@ if __name__ == "__main__":
     # modelの設定
     net = nn.Linear(300, 4)
 
-    net_path = '../73/73_net.pth'
+    net_path = "../73/73_net.pth"
     net.load_state_dict(torch.load(net_path))
 
     # 学習データの読み込み
-    train_x = torch.tensor(
-        np.load('../70/train_vector.npy'),
-        requires_grad=True
-        )
+    train_x = torch.tensor(np.load("../70/train_vector.npy"), requires_grad=True)
 
-    train_y = torch.tensor(
-        np.load('../70/train_label.npy')
-        )
+    train_y = torch.tensor(np.load("../70/train_label.npy"))
 
     # 評価データの読み込み
-    test_x = torch.tensor(
-        np.load('../70/test_vector.npy'),
-        requires_grad=True
-        )
+    test_x = torch.tensor(np.load("../70/test_vector.npy"), requires_grad=True)
 
-    test_y = torch.tensor(
-        np.load('../70/test_label.npy')
-        )
+    test_y = torch.tensor(np.load("../70/test_label.npy"))
 
     # 学習データに対する予測
     train_pred_prob = net(train_x)
@@ -40,7 +30,7 @@ if __name__ == "__main__":
     train_correct_num = (train_pred == train_y).sum().item()
     train_size = train_y.size(0)
     train_acc = (train_correct_num / train_size) * 100
-    print(f'train acc:{train_acc: .2f}%')
+    print(f"train acc:{train_acc: .2f}%")
     # train acc: 72.84%
 
     # 評価データに対する予測
@@ -51,5 +41,5 @@ if __name__ == "__main__":
     test_correct_num = (test_pred == test_y).sum().item()
     test_size = test_y.size(0)
     test_acc = (test_correct_num / test_size) * 100
-    print(f'test acc:{test_acc: .2f}%')
+    print(f"test acc:{test_acc: .2f}%")
     # test acc: 68.29%

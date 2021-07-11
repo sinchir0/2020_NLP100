@@ -12,6 +12,8 @@ def file_line_reader_generator(file_path):
             yield line
 
 
+import ip
+
 if __name__ == "__main__":
 
     # generatorで読み込む

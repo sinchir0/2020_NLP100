@@ -1,17 +1,16 @@
 # 71. 単層ニューラルネットワークによる予測
 
 import numpy as np
-
 import torch
 from torch import nn
 
 if __name__ == "__main__":
 
     # Xの読み込み
-    X = np.load('../70/train_vector.npy')
+    X = np.load("../70/train_vector.npy")
     X = torch.tensor(X, requires_grad=True)
 
-    # Wの生成    
+    # Wの生成
     W = torch.randn(300, 4)
 
     # XとWの内積
@@ -30,4 +29,8 @@ if __name__ == "__main__":
     #     [0.0954, 0.6650, 0.1910, 0.0486],
     #     [0.0869, 0.3767, 0.2606, 0.2759]])
 
-    torch.save(output, '71.pt')
+    torch.save(output, "71.pt")
+
+    assert torch.equal(
+        net.fc(torch.zeros_like(x_train)), torch.zeros(x_train.shape[0], 4)
+    )

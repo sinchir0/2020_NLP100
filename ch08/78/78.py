@@ -10,7 +10,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from torch import nn
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader, Dataset
+
 
 class TextDataset(Dataset):
     def __init__(self, X, y):
@@ -23,6 +24,7 @@ class TextDataset(Dataset):
     def __getitem__(self, idx):
         return self.X[idx], self.y[idx]
 
+
 class Net(nn.Module):
     def __init__(self, in_shape: int, out_shape: int):
         super().__init__()
@@ -33,6 +35,7 @@ class Net(nn.Module):
         x = self.fc(x)
         x = self.softmax(x)
         return x
+
 
 def calc_acc(net, train_x, y_true) -> float:
     """modelと学習データ、正解データを用いて、正解率を計算する"""
@@ -45,21 +48,28 @@ def calc_acc(net, train_x, y_true) -> float:
     acc = (correct_num / total_size) * 100
     return acc
 
+
 if __name__ == "__main__":
 
     if not torch.cuda.is_available():
-        print('No cuda')
+        print("No cuda")
 
-    PATH = '..'
+    PATH = ".."
 
-    device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
+    device = (
+        torch.device("cuda:0") if torch.cuda.is_available() else torch.device("cpu")
+    )
 
     # 学習データの読み込み
-    train_x = torch.tensor(np.load(f"{PATH}/70/train_vector.npy"), requires_grad=True).to(device)
+    train_x = torch.tensor(
+        np.load(f"{PATH}/70/train_vector.npy"), requires_grad=True
+    ).to(device)
     train_y = torch.tensor(np.load(f"{PATH}/70/train_label.npy")).to(device)
 
     # 評価データの読み込み
-    valid_x = torch.tensor(np.load(f"{PATH}/70/valid_vector.npy"), requires_grad=True).to(device)
+    valid_x = torch.tensor(
+        np.load(f"{PATH}/70/valid_vector.npy"), requires_grad=True
+    ).to(device)
     valid_y = torch.tensor(np.load(f"{PATH}/70/valid_label.npy")).to(device)
 
     # modelの設定

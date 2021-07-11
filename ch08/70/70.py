@@ -1,13 +1,8 @@
 # 70. 単語ベクトルの和による特徴量
 
-import sys
-
-sys.path.append('../../src')
-
-from util import preprocess
-from util import load_data
-import numpy as np
 import gensim
+import numpy as np
+from NLP100.util import load_data, preprocess
 
 
 def get_mean_vector(model, sentence: list):
@@ -31,26 +26,28 @@ if __name__ == "__main__":
 
     # 前処理
     for name in name_list:
-        dfs[name]['TITLE'] = dfs[name][['TITLE']].apply(preprocess)
+        dfs[name]["TITLE"] = dfs[name][["TITLE"]].apply(preprocess)
 
     # 分かち書き
     for name in name_list:
-        dfs[name]['TITLE_SPLIT'] = [text.split(
-            ' ') for text in dfs[name]['TITLE'].tolist()]
+        dfs[name]["TITLE_SPLIT"] = [
+            text.split(" ") for text in dfs[name]["TITLE"].tolist()
+        ]
 
     # 特徴量行列の取得
     for name in name_list:
-        dfs[name]['TITLE_VECTOR'] = [get_mean_vector(
-            model, text) for text in dfs[name]['TITLE_SPLIT'].tolist()]
+        dfs[name]["TITLE_VECTOR"] = [
+            get_mean_vector(model, text) for text in dfs[name]["TITLE_SPLIT"].tolist()
+        ]
 
     # ラベル変換
-    label_dict = {'b': 0, 't': 1, 'e': 2, 'm': 3}
+    label_dict = {"b": 0, "t": 1, "e": 2, "m": 3}
     for name in name_list:
-        dfs[name]['CATEGORY'] = dfs[name]['CATEGORY'].map(label_dict)
+        dfs[name]["CATEGORY"] = dfs[name]["CATEGORY"].map(label_dict)
 
     # データの保存
     for name in name_list:
         # 特徴量行列
-        np.save(f'{name}_vector', np.stack(dfs[name]['TITLE_VECTOR']))
+        np.save(f"{name}_vector", np.stack(dfs[name]["TITLE_VECTOR"]))
         # ラベル
-        np.save(f'{name}_label', np.stack(dfs[name]['CATEGORY']))
+        np.save(f"{name}_label", np.stack(dfs[name]["CATEGORY"]))
