@@ -6,6 +6,7 @@
 # === セクション名 ===:2
 # ==== セクション名 ====:3
 
+import re
 import pandas as pd
 
 if __name__ == "__main__": 
