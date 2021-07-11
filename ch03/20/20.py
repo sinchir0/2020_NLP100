@@ -10,6 +10,6 @@
 import pandas as pd
 
 if __name__ == "__main__":
-    df = pd.read_json('jawiki-country.json.gz', lines=True)
-    uk_text = df.query('title=="イギリス"')['text'].values[0]
+    df = pd.read_json("jawiki-country.json.gz", lines=True)
+    uk_text = df.query('title=="イギリス"')["text"].values[0]
     print(uk_text)

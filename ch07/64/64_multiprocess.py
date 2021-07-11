@@ -4,8 +4,7 @@
 # !wget http://download.tensorflow.org/data/questions-words.txt
 
 import time
-from multiprocessing import Manager, Pool, Process
-from typing import Tuple
+from multiprocessing import Pool
 
 import gensim
 

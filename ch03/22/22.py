@@ -4,18 +4,19 @@
 # https://github.com/wakamezake/nlp_q100_2020/tree/master/ch03
 
 import re
+
 import pandas as pd
 
 if __name__ == "__main__":
-    df = pd.read_json('../20/jawiki-country.json.gz', lines=True)
-    uk_text = df.query('title=="イギリス"')['text'].values[0]
-    uk_texts = uk_text.split('\n')
-    ans = list(filter(lambda x: '[Category:' in x, uk_texts))
+    df = pd.read_json("../20/jawiki-country.json.gz", lines=True)
+    uk_text = df.query('title=="イギリス"')["text"].values[0]
+    uk_texts = uk_text.split("\n")
+    ans = list(filter(lambda x: "[Category:" in x, uk_texts))
     print(ans)
     # import ipdb; ipdb.set_trace()
 
     # pattern = re.compile(r'\[\[Category:(.*?)\]\]')
-    pattern = re.compile(r'\[\[Category:(.*?)(?:\|.*)?\]\]')
+    pattern = re.compile(r"\[\[Category:(.*?)(?:\|.*)?\]\]")
     for txt in ans:
         match_txt = pattern.match(txt).groups()
         print(match_txt)
@@ -31,4 +32,3 @@ if __name__ == "__main__":
 
     # 質問点：正規表現の作り方
     # 今回は他の人の解答見て正規表現コピーした。
-    

@@ -2,9 +2,8 @@ import sys
 
 sys.path.append("../../src")
 
-from util import train_valid_test_split
-
 import pandas as pd
+from util import train_valid_test_split
 
 newsCorpora = pd.read_table(
     "../../data/NewsAggregatorDataset/newsCorpora.csv", header=None
