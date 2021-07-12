@@ -1,3 +1,4 @@
+# 51. 特徴量抽出
 # n-gram, w2v, tf-idf, fast-text, Universal Encoder? yukiさんがatmaで使っていたやつ
 # を試してみたい。
 import sys

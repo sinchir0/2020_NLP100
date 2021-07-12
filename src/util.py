@@ -125,9 +125,9 @@ def load_data(data_check=False) -> dict:
     """データの読み込み"""
     # 読み込むファイルを定義
     inputs = {
-        'train': '../50/train.txt',
-        'valid': '../50/valid.txt',
-        'test': '../50/test.txt',
+        'train': '../ch06/50/train.txt',
+        'valid': '../ch06/50/valid.txt',
+        'test': '../ch06/50/test.txt',
     }
 
     dfs = {}
@@ -150,7 +150,8 @@ def preprocess(text) -> str:
         hero.preprocessing.remove_digits,
         hero.preprocessing.remove_punctuation,
         hero.preprocessing.remove_diacritics,
-        hero.preprocessing.remove_stopwords
+        hero.preprocessing.remove_stopwords,
+        hero.preprocessing.remove_whitespace
     ])
 
     return clean_text
@@ -170,3 +171,6 @@ class TextFeatureFitTransform():
 
     def transform(self, input_text) -> pd.DataFrame:
         return self.vec.transform(input_text)
+
+    def vocab(self) -> dict:
+        return self.vec.vocabulary_
