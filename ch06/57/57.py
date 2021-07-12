@@ -1,11 +1,11 @@
-import  pickle
+import pickle
 
 import numpy as np
 
-with open('../52/LR_with_cnt_feat.pickle', mode='rb') as fp:
+with open("../52/LR_with_cnt_feat.pickle", mode="rb") as fp:
     clf = pickle.load(fp)
 
-with open('../51/vec_dict.pkl', 'rb') as f:
+with open("../51/vec_dict.pkl", "rb") as f:
     vec_dict = pickle.load(f)
 
 # train_feature = np.loadtxt('../51/train.feature.cntvec.txt')
@@ -16,13 +16,13 @@ print("Top 10")
 for idx, col in enumerate(np.argsort(clf.coef_[0])[::-1]):
     print(f"col_name: {vec_dict_list[col]}, coef: {clf.coef_[0][col] :.2f}")
     if idx == 10:
-        break;
+        break
 
 print("Last 10")
 for idx, col in enumerate(np.argsort(clf.coef_[0])):
     print(f"col_name: {vec_dict_list[col]}, coef: {clf.coef_[0][col] :.2f}")
     if idx == 10:
-        break;
+        break
 
 # Top 10
 # col_name: deflation, coef: 1.65

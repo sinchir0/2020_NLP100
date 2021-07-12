@@ -8,42 +8,48 @@ from multiprocessing import Pool
 
 import gensim
 
+
 def get_most_similar(model, line: str) -> str:
-    '''questions-wordsのデータから、類似単語と類似度を計算する'''
+    """questions-wordsのデータから、類似単語と類似度を計算する"""
 
     # 最初の単語が:だった場合は\nだけ削除して返す。
-    first_word = line.split(' ')[0]
-    if first_word == ':':
-        return line.replace('\n','')
-    
+    first_word = line.split(" ")[0]
+    if first_word == ":":
+        return line.replace("\n", "")
+
     # 類似度を計算
-    second_word = line.split(' ')[1]
-    third_word = line.split(' ')[2]
+    second_word = line.split(" ")[1]
+    third_word = line.split(" ")[2]
 
-    result = model.most_similar(positive=[second_word, third_word], negative=[first_word], topn=1)
+    result = model.most_similar(
+        positive=[second_word, third_word], negative=[first_word], topn=1
+    )
 
-    line_add_result = line[:-1] + ' ' + str(result[0])
+    line_add_result = line[:-1] + " " + str(result[0])
 
     return line_add_result
+
 
 if __name__ == "__main__":
 
     start = time.time()
 
-    model = gensim.models.KeyedVectors.load_word2vec_format('../60/GoogleNews-vectors-negative300.bin', binary=True)
+    model = gensim.models.KeyedVectors.load_word2vec_format(
+        "../60/GoogleNews-vectors-negative300.bin", binary=True
+    )
 
-    with open('questions-words.txt') as f:
+    with open("questions-words.txt") as f:
         questions_words = f.readlines()
 
     # 元データに類似単語を追加したlistを取得
     result_list = [get_most_similar(model, line) for line in questions_words]
 
-    join_result = '\n'.join(result_list)
-    
-    with open("result.txt", 'w') as f:
+    join_result = "\n".join(result_list)
+
+    with open("result.txt", "w") as f:
         f.write(join_result)
 
     elapsed_time = time.time() - start
-    print (f"elapsed_time: {elapsed_time: .2f}[sec]")
+    print(f"elapsed_time: {elapsed_time: .2f}[sec]")
     # 普通にやった場合
     # elapsed_time: 22.35[sec]
