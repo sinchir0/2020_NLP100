@@ -63,7 +63,7 @@ class RNN(nn.Module):
     def forward(self, x, h_0=None):
         x = self.emb(x)
         x, h_t = self.rnn(x, h_0)
-        x = x[:, -1, :]
+        x = x[:, -1, :] # 一番最後の出力に絞る、やっていいのかこれ？
         x = self.fc(x)
         x = self.softmax(x)
         return x
