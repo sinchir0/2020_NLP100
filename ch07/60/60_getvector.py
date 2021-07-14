@@ -3,9 +3,12 @@
 # ”United States”の単語ベクトルを表示せよ．ただし，”United States”は内部的には”United_States”と表現されていることに注意せよ．
 
 import gensim
-model = gensim.models.KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True)
 
-print(model['United_States'])
+model = gensim.models.KeyedVectors.load_word2vec_format(
+    "GoogleNews-vectors-negative300.bin", binary=True
+)
+
+print(model["United_States"])
 # [-3.61328125e-02 -4.83398438e-02  2.35351562e-01  1.74804688e-01
 #  -1.46484375e-01 -7.42187500e-02 -1.01562500e-01 -7.71484375e-02
 #   1.09375000e-01 -5.71289062e-02 -1.48437500e-01 -6.00585938e-02

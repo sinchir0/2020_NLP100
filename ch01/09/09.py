@@ -5,18 +5,23 @@
 
 import random
 
+
 def text_randomizer(text: str):
-    '''長さが４文字より上の単語をランダムに並び替える'''
-    return [''.join(random.sample(text,len(text))) if len(text) > 4 else text for text in center.split(' ')]
+    """長さが４文字より上の単語をランダムに並び替える"""
+    return [
+        "".join(random.sample(text, len(text))) if len(text) > 4 else text
+        for text in center.split(" ")
+    ]
+
 
 if __name__ == "__main__":
 
-    raw_text = 'I couldn’t believe that I could actually understand what I was reading : the phenomenal power of the human mind .'
+    raw_text = "I couldn’t believe that I could actually understand what I was reading : the phenomenal power of the human mind ."
 
     top = raw_text[:1]
     center = raw_text[1:-1]
     last = raw_text[-1:]
 
-    center_shuffle = ' '.join(text_randomizer(center))
+    center_shuffle = " ".join(text_randomizer(center))
 
     print(top, center_shuffle, last)

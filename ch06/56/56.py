@@ -1,13 +1,12 @@
-import pandas as pd
 import numpy as np
-
+import pandas as pd
 from sklearn.metrics import classification_report
 
 # ground truth
-test_y = pd.read_table('../50/test.txt', usecols=['CATEGORY'])
+test_y = pd.read_table("../50/test.txt", usecols=["CATEGORY"])
 
 # predict value
-test_pred = np.load('../53/test_pred.npy', allow_pickle=True)
+test_pred = np.load("../53/test_pred.npy", allow_pickle=True)
 
 print(classification_report(test_y, test_pred))
 #               precision    recall  f1-score   support

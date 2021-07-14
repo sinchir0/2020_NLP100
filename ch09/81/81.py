@@ -8,23 +8,32 @@ import pandas as pd
 import torch.nn as nn
 
 class RNN(nn.Module):
-    def __init__(self, vocab_size, emb_dim=300):
+    def __init__(self, vocab_size, emb_dim=300, hidden_size=50, output_size=4):
         self.emb = nn.embedding(
             vocab_size, 
             emb_dim
             )
         self.rnn = nn.RNN(
             input_size=emb_dim,
-            hidden_size=50, 
+            hidden_size=hidden_size, 
             num_layers=1,
             nonlinearity='tanh'
             bias=True
             )
-        self.softmax = nn.Softmax()
+        self.fc = nn.Linear(
+            in_features=hidden_size,
+            out_features=output_size,
+            bias=True
+            )
+        self.softmax = nn.Softmax(dim=1)
+
 
     def forward(self, x, h_0=0):
         x = self.emb(x)
-        x, h_n = self.rnn(x, h_0)
+        x, h_t = self.rnn(x, h_0)
+        x = self.linear(x)
+        x = self.softmax(x)
+        return x, h_t
 
 if __name__ == '__main__':
 
