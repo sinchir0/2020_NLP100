@@ -95,3 +95,14 @@ if __name__ == '__main__':
     for i in range(10):
         X = dataset[i][0]
         print(model(x=X))
+
+    # tensor([[0.0973, 0.2198, 0.1984, 0.4845]], grad_fn=<SoftmaxBackward>)
+    # tensor([[0.2295, 0.2891, 0.1601, 0.3214]], grad_fn=<SoftmaxBackward>)
+    # tensor([[0.1391, 0.3773, 0.2486, 0.2351]], grad_fn=<SoftmaxBackward>)
+    # tensor([[0.2070, 0.1848, 0.1685, 0.4398]], grad_fn=<SoftmaxBackward>)
+    # tensor([[0.2118, 0.1704, 0.2611, 0.3568]], grad_fn=<SoftmaxBackward>)
+    # tensor([[0.2118, 0.1704, 0.2611, 0.3568]], grad_fn=<SoftmaxBackward>)
+    # tensor([[0.1008, 0.2200, 0.1648, 0.5144]], grad_fn=<SoftmaxBackward>)
+    # tensor([[0.1008, 0.2200, 0.1648, 0.5144]], grad_fn=<SoftmaxBackward>)
+    # tensor([[0.3206, 0.2763, 0.2435, 0.1595]], grad_fn=<SoftmaxBackward>)
+    # tensor([[0.2695, 0.4305, 0.1578, 0.1422]], grad_fn=<SoftmaxBackward>)
