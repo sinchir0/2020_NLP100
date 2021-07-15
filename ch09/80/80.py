@@ -8,8 +8,12 @@ import pickle
 
 import pandas as pd
 
+import sys
+sys.path.append('../../src/NLP100')
+
 from util import preprocess
 
+from ipdb import set_trace as st
 
 def change_word_to_id(input_word: str, word_id_dict: dict) -> str:
     # ID番号へ変換、辞書に存在しないものは0をいれる
@@ -26,12 +30,18 @@ if __name__ == '__main__':
 
     # データの読み込み
     train = pd.read_csv('../../ch06/50/train.txt', sep='\t', index_col=0)
+    test = pd.read_csv('../../ch06/50/test.txt', sep='\t', index_col=0)
+
+    # trainとtestを結合する
+    train['flg'] = 'train'
+    test['flg'] = 'test'
+    train_test = pd.concat([train,test])
 
     # 前処理
-    train['TITLE'] = train[['TITLE']].apply(preprocess)
+    train_test['TITLE'] = train_test[['TITLE']].apply(preprocess)
 
     # 全文章を一つにまとめたstrを生成
-    all_sentence_list = ' '.join(train['TITLE'].tolist()).split(' ')
+    all_sentence_list = ' '.join(train_test['TITLE'].tolist()).split(' ')
 
     # 全文章に含まれる単語の頻度を計算
     all_word_cnt = collections.Counter(all_sentence_list)
@@ -52,8 +62,13 @@ if __name__ == '__main__':
     with open("word_id_dict.pkl", "wb") as tf:
         pickle.dump(word_id_dict, tf)
 
-    # trainのTITLEをID番号へと変換
-    train['TITLE'] = train['TITLE'].apply(lambda x : change_word_to_id(x, word_id_dict))
+    # train_testのTITLEをID番号へと変換
+    train_test['TITLE'] = train_test['TITLE'].apply(lambda x : change_word_to_id(x, word_id_dict))
+
+    # train, testへ分離
+    train = train_test.query('flg == "train"')
+    test = train_test.query('flg == "test"')
 
     # 出力
     train.to_pickle('train_title_id.pkl')
+    train.to_pickle('test_title_id.pkl')
