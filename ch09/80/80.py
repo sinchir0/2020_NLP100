@@ -71,4 +71,4 @@ if __name__ == '__main__':
 
     # 出力
     train.to_pickle('train_title_id.pkl')
-    train.to_pickle('test_title_id.pkl')
+    test.to_pickle('test_title_id.pkl')
