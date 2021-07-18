@@ -143,7 +143,7 @@ def train_fn(model, loader, device, optimizer, criterion, BATCHSIZE, HIDDEN_SIZE
         dataloader_x.to(device)
         dataloader_y.to(device)
 
-        optimizer.zero_grad()
+        # optimizer.zero_grad()
 
         dataloader_y_pred_prob = model(
             x=dataloader_x,
@@ -154,7 +154,7 @@ def train_fn(model, loader, device, optimizer, criterion, BATCHSIZE, HIDDEN_SIZE
         loss = criterion(dataloader_y_pred_prob, dataloader_y)
         # 勾配の計算
         loss.backward()
-        optimizer.step()
+        # optimizer.step()
 
         # 訓練データでの損失の平均を計算する
         train_running_loss += loss.item() / len(loader)
@@ -258,7 +258,8 @@ if __name__ == '__main__':
 
     # criterion, optimizerの設定
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.05)
+    # optimizer = torch.optim.SGD(model.parameters(), lr=0.05)
+    optimizer = None
 
     # datasetの定義
     dataset_train = TextDataset(train['TITLE'], train['CATEGORY'], device)
@@ -295,10 +296,10 @@ if __name__ == '__main__':
         # 20epoch毎にチェックポイントを生成
         if epoch % 20 == 0:
             torch.save(model.state_dict(), f"86_model_epoch{epoch}.pth")
-            torch.save(
-                optimizer.state_dict(),
-                f"86_optimizer_epoch{epoch}.pth",
-            )
+            # torch.save(
+            #     optimizer.state_dict(),
+            #     f"86_optimizer_epoch{epoch}.pth",
+            # )
 
     # グラフへのプロット
     losses = {"train": train_losses, "test": test_losses}
