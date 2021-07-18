@@ -1,7 +1,5 @@
 # 88. パラメータチューニング
 
-# 85. 双方向RNN・多層化
-
 import random
 import os
 from numpy.lib.function_base import kaiser
@@ -61,18 +59,18 @@ class RNN(nn.Module):
         super().__init__()
 
         # embedding層の初期化
-        # model = gensim.models.KeyedVectors.load_word2vec_format('../../ch07/60/GoogleNews-vectors-negative300.bin', binary=True)
-        # weight = torch.zeros(len(word_id_dict)+1, 300) # 1はPADの分
-        # for word, idx in word_id_dict.items():
-        #     if word in model.vocab.keys():
-        #         weight[idx] = torch.tensor(model[word])
+        model = gensim.models.KeyedVectors.load_word2vec_format('../../ch07/60/GoogleNews-vectors-negative300.bin', binary=True)
+        weight = torch.zeros(len(word_id_dict)+1, 300) # 1はPADの分
+        for word, idx in word_id_dict.items():
+            if word in model.vocab.keys():
+                weight[idx] = torch.tensor(model[word])
 
-        # # pretrainする場合のemb
-        # # vocab_size, emb_dimは、GoogleNews-vectors-negative300が3000000語彙で300次元だから指定しなくて良い
-        # self.emb = nn.Embedding.from_pretrained(
-        #     weight,
-        #     padding_idx=0 # 0に変換された文字にベクトルを計算しない
-        #     )
+        # pretrainする場合のemb
+        # vocab_size, emb_dimは、GoogleNews-vectors-negative300が3000000語彙で300次元だから指定しなくて良い
+        self.emb = nn.Embedding.from_pretrained(
+            weight,
+            padding_idx=0 # 0に変換された文字にベクトルを計算しない
+            )
         
         # random
         # weight = torch.rand(len(word_id_dict)+1, 300) #ランダムな単語ベクトルでも効果があるか
@@ -84,11 +82,11 @@ class RNN(nn.Module):
         # self.emb = nn.Embedding.from_pretrained(weights)
 
         # default
-        self.emb = nn.Embedding(
-            vocab_size, 
-            emb_dim,
-            padding_idx=0 # 0に変換された文字にベクトルを計算しない
-            )
+        # self.emb = nn.Embedding(
+        #     vocab_size, 
+        #     emb_dim,
+        #     padding_idx=0 # 0に変換された文字にベクトルを計算しない
+        #     )
 
         self.lstm = nn.LSTM(
             input_size=emb_dim,
