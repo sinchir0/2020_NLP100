@@ -88,10 +88,10 @@ class RNN(nn.Module):
         #     padding_idx=0 # 0に変換された文字にベクトルを計算しない
         #     )
 
-        self.rnn1 = nn.RNN(
+        self.rnn = nn.RNN(
             input_size=emb_dim,
             hidden_size=hidden_size, 
-            num_layers=1,
+            num_layers=3,
             nonlinearity='tanh',
             bias=True,
             batch_first=True,
@@ -110,28 +110,6 @@ class RNN(nn.Module):
         # D: 2 if bidirectional=True otherwise 1
         # H_out: hidden size
 
-        self.rnn2 = nn.RNN(
-            input_size=hidden_size*2,
-            hidden_size=hidden_size,
-            num_layers=1,
-            nonlinearity='tanh',
-            bias=True,
-            batch_first=True,
-            bidirectional=True
-            )
-        # rnn1(bidirectional)のoutputは(N, L, D * H_out)=(32, 10, 2 * 50),
-        # (N, L, D * H_out) = (N, L, H_in)にするためにはH_in= D * H_out=2 * 50にする必要がある
-
-        self.rnn3 = nn.RNN(
-            input_size=hidden_size*2,
-            hidden_size=hidden_size,
-            num_layers=1,
-            nonlinearity='tanh',
-            bias=True,
-            batch_first=True,
-            bidirectional=True
-            )
-
         self.fc = nn.Linear(
             in_features=hidden_size*2,
             out_features=output_size,
@@ -148,9 +126,7 @@ class RNN(nn.Module):
         # 10672を32で割ると、333 余り16
         # よって余りをどう扱うのかの問題になる
         # loaderの引数にdrop_last=Trueを追加すると、余りは捨てるようになる。
-        x, h_t = self.rnn1(x, h_0)
-        x, h_t = self.rnn2(x, h_0)
-        x, h_t = self.rnn3(x, h_0)
+        x, h_t = self.rnn(x, h_0)
         x = x[:, -1, :] # sequenceの長さ(現在は10)のうち、一番最後の出力に絞る、やっていいのかこれ？
         x = self.fc(x)
         x = self.softmax(x)
@@ -171,7 +147,7 @@ def train_fn(model, loader, device, optimizer, criterion, BATCHSIZE, HIDDEN_SIZE
 
         dataloader_y_pred_prob = model(
             x=dataloader_x,
-            h_0=torch.zeros(2 * 1, BATCHSIZE, HIDDEN_SIZE).to(device) # D * num_layer, bidirectionnalの場合はD=2
+            h_0=torch.zeros(2 * 3, BATCHSIZE, HIDDEN_SIZE).to(device) # D * num_layer, bidirectionnalの場合はD=2
             )
 
         # dataloader_xでの損失の計算/
