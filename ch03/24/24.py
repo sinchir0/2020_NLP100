@@ -10,13 +10,13 @@ if __name__ == "__main__":
     uk_text = df.query('title=="イギリス"')["text"].values[0]
     uk_texts = uk_text.split("\n")
 
-    pattern = re.compile(r'\[\[ファイル:(.+?)\|')
+    pattern = re.compile(r"\[\[ファイル:(.+?)\|")
 
     for txt in uk_texts:
         m = re.match(pattern, txt)
         if m:
             match_txt = pattern.match(txt).groups()
-            print(''.join(match_txt))
+            print("".join(match_txt))
             # Descriptio Prime Tabulae Europae.jpg
             # Lenepveu, Jeanne d'Arc au siège d'Orléans.jpg
             # London.bankofengland.arp.jpg

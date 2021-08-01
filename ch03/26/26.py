@@ -8,23 +8,24 @@ import json
 import re
 
 import pandas as pd
-
 from ipdb import set_trace as st
 
+
 def remove_stress(dc):
-    '''dictで取得した各要素について、「'が複数回続く」と言う条件を満たしたvalueを何もなしに置換する'''
+    """dictで取得した各要素について、「'が複数回続く」と言う条件を満たしたvalueを何もなしに置換する"""
     r = re.compile("'+")
-    return {k: r.sub('', v) for k, v in dc.items()}
+    return {k: r.sub("", v) for k, v in dc.items()}
+
 
 if __name__ == "__main__":
-    
+
     with gzip.open("../20/jawiki-country.json.gz", mode="rt", encoding="utf-8") as fin:
         dict_list = [json.loads(line) for line in fin]
 
     # 全要素をstrへ変換
     text_list = [json.dumps(dict_val, ensure_ascii=False) for dict_val in dict_list]
 
-    pattern = re.compile('\|(.+?)\s=\s*(.+)')
+    pattern = re.compile("\|(.+?)\s=\s*(.+)")
 
     ans = {}
     for line in text_list:

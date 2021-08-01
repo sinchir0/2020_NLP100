@@ -131,9 +131,9 @@ def load_data(data_check=False) -> dict:
     """データの読み込み"""
     # 読み込むファイルを定義
     inputs = {
-        'train': '../ch06/50/train.txt',
-        'valid': '../ch06/50/valid.txt',
-        'test': '../ch06/50/test.txt',
+        "train": "../ch06/50/train.txt",
+        "valid": "../ch06/50/valid.txt",
+        "test": "../ch06/50/test.txt",
     }
 
     dfs = {}
@@ -151,15 +151,18 @@ def load_data(data_check=False) -> dict:
 
 def preprocess(text: str) -> str:
     """前処理"""
-    clean_text = hero.clean(text, pipeline=[
-        hero.preprocessing.fillna,
-        hero.preprocessing.lowercase,
-        hero.preprocessing.remove_digits,
-        hero.preprocessing.remove_punctuation,
-        hero.preprocessing.remove_diacritics,
-        hero.preprocessing.remove_stopwords,
-        hero.preprocessing.remove_whitespace
-    ])
+    clean_text = hero.clean(
+        text,
+        pipeline=[
+            hero.preprocessing.fillna,
+            hero.preprocessing.lowercase,
+            hero.preprocessing.remove_digits,
+            hero.preprocessing.remove_punctuation,
+            hero.preprocessing.remove_diacritics,
+            hero.preprocessing.remove_stopwords,
+            hero.preprocessing.remove_whitespace,
+        ],
+    )
     return clean_text
 
 
