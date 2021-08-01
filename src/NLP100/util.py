@@ -131,15 +131,9 @@ def load_data(data_check=False) -> dict:
     """データの読み込み"""
     # 読み込むファイルを定義
     inputs = {
-<<<<<<< HEAD:src/util.py
-        'train': '../ch06/50/train.txt',
-        'valid': '../ch06/50/valid.txt',
-        'test': '../ch06/50/test.txt',
-=======
         "train": "../../ch06/50/train.txt",
         "valid": "../../ch06/50/valid.txt",
         "test": "../../ch06/50/test.txt",
->>>>>>> 16dafcaa09f28883e75f23c09ab0bdb064b2d4e0:src/NLP100/util.py
     }
 
     dfs = {}
@@ -157,17 +151,6 @@ def load_data(data_check=False) -> dict:
 
 def preprocess(text: str) -> str:
     """前処理"""
-<<<<<<< HEAD:src/util.py
-    clean_text = hero.clean(text, pipeline=[
-        hero.preprocessing.fillna,
-        hero.preprocessing.lowercase,
-        hero.preprocessing.remove_digits,
-        hero.preprocessing.remove_punctuation,
-        hero.preprocessing.remove_diacritics,
-        hero.preprocessing.remove_stopwords,
-        hero.preprocessing.remove_whitespace
-    ])
-=======
     clean_text = hero.clean(
         text,
         pipeline=[
@@ -179,8 +162,6 @@ def preprocess(text: str) -> str:
             hero.preprocessing.remove_stopwords,
         ],
     )
->>>>>>> 16dafcaa09f28883e75f23c09ab0bdb064b2d4e0:src/NLP100/util.py
-
     return clean_text
 
 
@@ -200,9 +181,3 @@ class TextFeatureFitTransform:
 
     def transform(self, input_text) -> pd.DataFrame:
         return self.vec.transform(input_text)
-<<<<<<< HEAD:src/util.py
-
-    def vocab(self) -> dict:
-        return self.vec.vocabulary_
-=======
->>>>>>> 16dafcaa09f28883e75f23c09ab0bdb064b2d4e0:src/NLP100/util.py
