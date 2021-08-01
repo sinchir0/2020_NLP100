@@ -1,8 +1,6 @@
 # 31. 動詞
 # 動詞の表層形をすべて抽出せよ．
 
-from ipdb import set_trace as st
-
 if __name__ == "__main__":
 
     filename = "../30/neko.txt.mecab"

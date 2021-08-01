@@ -3,8 +3,6 @@
 
 # 最長一致・・・複数候補ある場合、最も長いものを採用する
 
-from ipdb import set_trace as st
-
 if __name__ == "__main__":
 
     filename = '../30/neko.txt.mecab'
@@ -20,7 +18,7 @@ if __name__ == "__main__":
                 if len(fields) != 2 or fields[0] == '': # ['', '記号,一般,*,*,*,*,*\n']といったように、単語と分かち書きの情報が二つに分かれて入る
                     continue
                 else:
-                    attr =  fields[1].split(',')
+                    attr = fields[1].split(',')
                     if (attr[0] == '名詞') & (attr[6] != '*\n'):
                         morphs.append(attr[6])
                     else:

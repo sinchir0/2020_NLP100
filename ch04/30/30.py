@@ -6,8 +6,6 @@
 # mecabでの分かち書き
 # mecab -o ./neko.txt.mecab ./neko.txt
 
-from ipdb import set_trace as st
-
 if __name__ == "__main__":
 
     filename = "./neko.txt.mecab"

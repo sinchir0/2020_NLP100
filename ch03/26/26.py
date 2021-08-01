@@ -7,9 +7,6 @@ import gzip
 import json
 import re
 
-import pandas as pd
-from ipdb import set_trace as st
-
 
 def remove_stress(dc):
     """dictで取得した各要素について、「'が複数回続く」と言う条件を満たしたvalueを何もなしに置換する"""

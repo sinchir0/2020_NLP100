@@ -4,18 +4,14 @@
 # https://qiita.com/yamaru/items/63a342c844cff056a549
 
 import os
-import pickle
 import random
 import time
 
-import gensim
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
-from ipdb import set_trace as st
-from numpy.lib.function_base import kaiser
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 from transformers import DistilBertModel, DistilBertTokenizer
@@ -73,7 +69,6 @@ class DistilBertClass(nn.Module):
 
     def forward(self, ids, mask):
         outputs = self.canine(ids, attention_mask=mask)
-        st()
         _, x = outputs["last_hidden_state"], outputs["pooler_output"]
         x = self.drop(x)
         x = self.fc(x)

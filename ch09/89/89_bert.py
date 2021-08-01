@@ -4,17 +4,14 @@
 # https://qiita.com/yamaru/items/63a342c844cff056a549
 
 import os
-import pickle
 import random
 import time
 
-import gensim
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
-from numpy.lib.function_base import kaiser
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 from transformers import BertModel, BertTokenizer
