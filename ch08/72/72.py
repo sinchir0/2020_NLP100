@@ -17,14 +17,8 @@ if __name__ == "__main__":
     loss = nn.CrossEntropyLoss()
     output = loss(X, Y)
 
-    import ipdb
-
-    ipdb.set_trace()
-
     print(output)
     # tensor(1.3074, grad_fn=<NllLossBackward>)
-
-    print(X)
 
     # 勾配の計算
     output.backward()  # Xはrequired_gradがTrueになっているため、outputの計算元であるXに関する勾配を裏で計算している
