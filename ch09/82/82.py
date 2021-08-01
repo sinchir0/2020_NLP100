@@ -5,6 +5,7 @@
 
 import random
 import os
+import time
 from tqdm import tqdm
 
 import pickle
@@ -42,7 +43,7 @@ class TextDataset(Dataset):
         X_list = [int(x) for x in self.X[idx].split()]
         
         # tensorに変換
-        inputs = torch.tensor(X_list)#.unsqueeze(0)
+        inputs = torch.tensor(X_list)
         label = torch.tensor(self.y[idx])
         
         return inputs, label
@@ -111,8 +112,9 @@ def train_fn(model, loader, optimizer, criterion, BATCHSIZE, HIDDEN_SIZE) -> flo
         optimizer.zero_grad()
 
         dataloader_y_pred_prob = model(
-            x=dataloader_x,
-            h_0=torch.zeros(1 * 1, BATCHSIZE, HIDDEN_SIZE)
+            x=dataloader_x
+            # x=dataloader_x,
+            # h_0=torch.zeros(1 * 1, BATCHSIZE, HIDDEN_SIZE)
             )
 
         # dataloader_xでの損失の計算
@@ -166,19 +168,22 @@ def padding(id_seq: str, max_len: int):
             id_list.append('0')
     return ' '.join(id_list)
 
-def make_graph(value_dict: dict, value_name: str, method: str) -> None:
+def make_graph(value_dict: dict, value_name: str, bn:int, method: str) -> None:
     """value_dictに関するgraphを生成し、保存する。"""
     for phase in ["train", "test"]:
         plt.plot(value_dict[phase], label=phase)
     plt.xlabel("epoch")
     plt.ylabel(value_name)
-    plt.title(f"{value_name} per epoch")
+    plt.title(f"{value_name} per epoch at bn{bn}")
     plt.legend()
-    plt.savefig(f"{method}_{value_name}.png")
+    plt.savefig(f"{method}_{value_name}_bn{bn}.png")
     plt.close()
 
 
 if __name__ == '__main__':
+
+    # 時間の計測
+    start = time.time()
 
     # データの読み込み
     train = pd.read_pickle('../80/train_title_id.pkl')
@@ -220,8 +225,10 @@ if __name__ == '__main__':
     dataset_test = TextDataset(test['TITLE'], test['CATEGORY'])
 
     # parameterの更新
+    # BATCHSIZE = 1
+    # BATCHSIZE = 32
     BATCHSIZE = train.shape[0]
-    dataloader_train = DataLoader(dataset_train, batch_size=BATCHSIZE, shuffle=False)
+    dataloader_train = DataLoader(dataset_train, batch_size=BATCHSIZE, shuffle=False, drop_last=True)
 
     train_losses = []
     train_accs = []
@@ -263,8 +270,12 @@ if __name__ == '__main__':
 
     accs = {"train": train_accs, "test": test_accs}
 
-    make_graph(losses, "losses", method='rnn')
-    make_graph(accs, "accs", method='rnn')
+    make_graph(losses, "losses", bn=BATCHSIZE, method='rnn')
+    make_graph(accs, "accs", bn=BATCHSIZE, method='rnn')
 
     print(f"train_acc: {train_acc}")
     print(f"test_acc: {test_acc}")
+
+    # 時間の出力
+    elapsed_time = time.time() - start
+    print(elapsed_time)

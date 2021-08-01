@@ -71,4 +71,7 @@ if __name__ == '__main__':
 
     # 出力
     train.to_pickle('train_title_id.pkl')
+    train.to_csv('train_title_id.csv')
+
     test.to_pickle('test_title_id.pkl')
+    test.to_csv('test_title_id.csv')

@@ -24,7 +24,7 @@ class TextDataset(Dataset):
         X_list = [int(x) for x in self.X[idx].split()]
         
         # tensorに変換
-        inputs = torch.tensor(X_list).unsqueeze(0)
+        inputs = torch.tensor(X_list)#.unsqueeze(0) # unsqueezeはtorch.Size([6]) →　torch.Size([1, 6])
         label = torch.tensor(self.y[idx])
         
         return inputs, label
@@ -61,6 +61,7 @@ class RNN(nn.Module):
         self.softmax = nn.Softmax(dim=1)
 
     def forward(self, x, h_0=None):
+        st()
         x = self.emb(x)
         x, h_t = self.rnn(x, h_0)
         x = x[:, -1, :] # 一番最後の出力に絞る、やっていいのかこれ？
@@ -94,6 +95,7 @@ if __name__ == '__main__':
     # 先頭10個の結果を出力
     for i in range(10):
         X = dataset[i][0]
+        X = X.unsqueeze(0)
         print(model(x=X))
 
     # tensor([[0.3996, 0.1701, 0.1483, 0.2821]], grad_fn=<SoftmaxBackward>)

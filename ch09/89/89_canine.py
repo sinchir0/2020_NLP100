@@ -216,7 +216,7 @@ if __name__ == '__main__':
     DROP_RATE = 0.4
     OUTPUT_SIZE = 4
     BATCH_SIZE = 32
-    NUM_EPOCHS = 10
+    NUM_EPOCHS = 30
     if DEBUG:
         NUM_EPOCHS = 2
     LEARNING_RATE = 2e-5

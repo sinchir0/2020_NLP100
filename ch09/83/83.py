@@ -1,7 +1,8 @@
 # 83. ミニバッチ化・GPU上での学習
 # 問題82のコードを改変し，B事例ごとに損失・勾配を計算して学習を行えるようにせよ（Bの値は適当に選べ）．また，GPU上で学習を実行せよ．
-
-
+# GPUで計算しているColabのコード
+# https://colab.research.google.com/drive/1IAzvlHQ19RSkqyVk4UosinRUgXnu2Q59?usp=sharing
+# dataset, h_0, modelをdevice送りした
 
 import random
 import os
@@ -42,7 +43,7 @@ class TextDataset(Dataset):
         X_list = [int(x) for x in self.X[idx].split()]
         
         # tensorに変換
-        inputs = torch.tensor(X_list)#.unsqueeze(0)
+        inputs = torch.tensor(X_list)
         label = torch.tensor(self.y[idx])
         
         return inputs, label
@@ -105,7 +106,7 @@ class RNN(nn.Module):
         x = self.softmax(x)
         return x
 
-def train_fn(model, loader, optimizer, criterion, BATCHSIZE, HIDDEN_SIZE) -> float:
+def train_fn(model, loader, device, optimizer, criterion, BATCHSIZE, HIDDEN_SIZE) -> float:
     """model, loaderを用いて学習を行い、lossを返す"""
     # 学習モードに設定
     model.train()
@@ -113,6 +114,9 @@ def train_fn(model, loader, optimizer, criterion, BATCHSIZE, HIDDEN_SIZE) -> flo
     train_running_loss = 0.0
 
     for dataloader_x, dataloader_y in loader:
+        dataloader_x.to(device)
+        dataloader_y.to(device)
+
         optimizer.zero_grad()
 
         dataloader_y_pred_prob = model(
@@ -210,9 +214,7 @@ if __name__ == '__main__':
     N_CATEGORIES = 4
 
     # deviceの指定
-    device = (
-        torch.device("cuda:0") if torch.cuda.is_available() else torch.device("cpu")
-    )
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # modelの定義
     model = RNN(vocab_size = N_LETTERS,
@@ -243,7 +245,7 @@ if __name__ == '__main__':
 
         # 学習
         train_running_loss = train_fn(
-            model, dataloader_train, optimizer, criterion, BATCHSIZE, HIDDEN_SIZE
+            model, dataloader_train, device, optimizer, criterion, BATCHSIZE, HIDDEN_SIZE
             )
         print(train_running_loss)
 

@@ -151,6 +151,8 @@ def train_fn(model, loader, device, optimizer, criterion, BATCHSIZE, HIDDEN_SIZE
             h_0=None
             )
 
+        st()
+
         # dataloader_xでの損失の計算/
         loss = criterion(dataloader_y_pred_prob, dataloader_y)
         # 勾配の計算
