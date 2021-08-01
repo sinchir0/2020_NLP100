@@ -221,7 +221,7 @@ if __name__ == "__main__":
     LEARNING_RATE = 2e-5
 
     # モデルの定義
-    model = CanineClass(DROP_RATE, OUTPUT_SIZE).to(device)
+    model = AlbertClass(DROP_RATE, OUTPUT_SIZE).to(device)
 
     # criterion, optimizerの設定
     criterion = nn.CrossEntropyLoss()
