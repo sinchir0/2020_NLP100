@@ -70,17 +70,19 @@ class BERTClass(nn.Module):
         # TypeError: dropout(): argument 'input' (position 1) must be Tensor, not str
         # https://github.com/huggingface/transformers/issues/8879#issuecomment-796328753
         # return_dict=Falseを追加したら解決
-        self.bert = BertModel.from_pretrained('bert-base-uncased', return_dict=False)
+        # self.bert = BertModel.from_pretrained('bert-base-uncased', return_dict=False)
+        self.bert = BertModel.from_pretrained('bert-base-uncased')
         self.drop = nn.Dropout(drop_rate)
         self.fc = nn.Linear(768, output_size)  # BERTの出力に合わせて768次元を指定
         self.softmax = nn.Softmax(dim=1)
 
     def forward(self, ids, mask):
-        st()
-        _, x = self.bert(ids, attention_mask=mask)
-        # 引数の一つ目は、(batch_size, seq_length=10, 768)のテンソル、これは生のBERTの出力、多分
-        # 引数の二つめは、(batch_size, 768)のテンソル、これは先頭単語[CLS]を取り出して、
-        # BertPoolerにて、同じhiddensize→hiddensizeへと全結合層を通して、その後tanhを通して-1~1にしたもの。
+        # _, x = self.bert(ids, attention_mask=mask)
+        bert_out = self.bert(ids, attention_mask=mask)
+        _, x = bert_out['last_hidden_state'], bert_out['pooler_output']
+        # 引数の一つ目は、(batch_size, seq_length=10, 768)のテンソル、last_hidden_state
+        # 引数の二つめは、(batch_size, 768)のテンソル、pooler_output
+        # これは先頭単語[CLS]を取り出して、BertPoolerにて、同じhiddensize→hiddensizeへと全結合層を通して、その後tanhを通して-1~1にしたもの。
         x = self.drop(x)
         x = self.fc(x)
         x = self.softmax(x)
@@ -154,20 +156,6 @@ def calculate_loss_and_accuracy(model, dataset, device=None, criterion=None):
         
     return loss / len(dataset), correct / total
 
-# def padding(id_seq: str, max_len: int):
-#     '''id_seqについて、
-#     max_lenより長い場合はmax_lenまでの長さにする。
-#     max_lenより短い場合はmax_lenになるように0を追加する。
-#     '''
-#     id_list = id_seq.split(' ')
-#     if len(id_list) > max_len:
-#         id_list = id_list[:max_len]
-#     else:
-#         pad_num = max_len - len(id_list)
-#         for _ in range(pad_num):
-#             id_list.append('0')
-#     return ' '.join(id_list)
-
 def make_graph(value_dict: dict, value_name: str, bn:int, method: str) -> None:
     """value_dictに関するgraphを生成し、保存する。"""
     for phase in ["train", "test"]:
@@ -226,41 +214,6 @@ if __name__ == '__main__':
     # {'input_ids': [101, 2885, 6561, 24514, 2391, 2006, 8169, 2586, 102, 0], 'token_type_ids': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'attention_mask': [1, 1, 1, 1, 1, 1, 1, 1, 1, 0]}
     # BERTでは、変換の過程で元の文の文頭と文末に特殊区切り文字である[CLS]と[SEP]がそれぞれ挿入されるため、それらも101と102として系列に含まれています。0はパディングを表します。
 
-
-    # train = pd.read_csv(f'{PATH}/80/train_title_id.csv')
-    # test = pd.read_csv(f'{PATH}/80/test_title_id.csv')
-    # test = test.reset_index(drop=True)
-
-    # # tokenizerの読み込み
-    # tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-
-    # # paddingの実施
-    # max_len = 10
-    # train['TITLE'] = train['TITLE'].apply(lambda x : padding(x, max_len))
-    # test['TITLE'] = test['TITLE'].apply(lambda x : padding(x, max_len))
-
-    # # yの変換
-    # cat_id_dict = {'b': 0, 't': 1, 'e':2, 'm':3}
-    # train['CATEGORY'] = train['CATEGORY'].map(cat_id_dict)
-    # test['CATEGORY'] = test['CATEGORY'].map(cat_id_dict)
-
-    # # 辞書の読み込み
-    # with open(f"{PATH}/80/word_id_dict.pkl", "rb") as tf:
-    #     word_id_dict = pickle.load(tf)
-
-    # N_LETTERS = len(word_id_dict.keys()) + 1 # pad分をplusする。
-    # EMB_SIZE = 300
-    # HIDDEN_SIZE = 50
-    # N_CATEGORIES = 4
-
-    # modelの定義
-    # model = RNN(vocab_size=N_LETTERS,
-    #             emb_dim=EMB_SIZE,
-    #             hidden_size=HIDDEN_SIZE,
-    #             output_size=N_CATEGORIES,
-    #             word_id_dict=word_id_dict
-    #             ).to(device)
-
     # パラメータの設定
     DROP_RATE = 0.4
     OUTPUT_SIZE = 4
@@ -276,14 +229,6 @@ if __name__ == '__main__':
     # criterion, optimizerの設定
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=LEARNING_RATE)
-
-    # datasetの定義
-    # dataset_train = TextDataset(train['TITLE'], train['CATEGORY'], device)
-    # dataset_test = TextDataset(test['TITLE'], test['CATEGORY'], device)
-
-    # parameterの更新
-    # BATCH_SIZE = 32
-    # dataloader_train = DataLoader(dataset_train, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
 
     train_losses = []
     train_accs = []
