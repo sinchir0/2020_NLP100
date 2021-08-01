@@ -9,6 +9,7 @@ import time
 from numpy.lib.function_base import kaiser
 from tqdm import tqdm
 
+
 import pickle
 import pandas as pd
 import numpy as np
@@ -20,7 +21,9 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 
-from transformers import BertTokenizer, BertModel
+from transformers import DistilBertTokenizer, DistilBertModel
+
+from ipdb import set_trace as st
 
 def seed_everything(seed=42, use_torch=False):
     random.seed(seed)
@@ -56,32 +59,24 @@ class TextDataset(Dataset):
         mask = inputs['attention_mask']
 
         return {
-            'ids': torch.tensor(ids, device=device),
-            'mask': torch.tensor(mask, device=device),
-            'labels': torch.tensor([self.y[idx]], device=device)
+            'ids': torch.LongTensor(ids, device=device),
+            'mask': torch.LongTensor(mask, device=device),
+            'labels': torch.LongTensor([self.y[idx]], device=device)
         }
 
-class BERTClass(nn.Module):
+class DistilBertClass(nn.Module):
     def __init__(self, drop_rate, output_size):
         super().__init__()
-        # outputs = model(ids, mask)
-        # にて、下のエラーで落ちる
-        # TypeError: dropout(): argument 'input' (position 1) must be Tensor, not str
-        # https://github.com/huggingface/transformers/issues/8879#issuecomment-796328753
-        # return_dict=Falseを追加したら解決
-        # self.bert = BertModel.from_pretrained('bert-base-uncased', return_dict=False)
-        self.bert = BertModel.from_pretrained('bert-base-uncased')
+        self.canine = DistilBertModel.from_pretrained('distilbert-base-uncased')
+
         self.drop = nn.Dropout(drop_rate)
         self.fc = nn.Linear(768, output_size)  # BERTの出力に合わせて768次元を指定
         self.softmax = nn.Softmax(dim=1)
 
     def forward(self, ids, mask):
-        # _, x = self.bert(ids, attention_mask=mask)
-        outputs = self.bert(ids, attention_mask=mask)
+        outputs = self.canine(ids, attention_mask=mask)
+        st()
         _, x = outputs['last_hidden_state'], outputs['pooler_output']
-        # 引数の一つ目は、(batch_size, seq_length=10, 768)のテンソル、last_hidden_state
-        # 引数の二つめは、(batch_size, 768)のテンソル、pooler_output
-        # これは先頭単語[CLS]を取り出して、BertPoolerにて、同じhiddensize→hiddensizeへと全結合層を通して、その後tanhを通して-1~1にしたもの。
         x = self.drop(x)
         x = self.fc(x)
         x = self.softmax(x)
@@ -163,23 +158,26 @@ def make_graph(value_dict: dict, value_name: str, bn:int, method: str) -> None:
     plt.ylabel(value_name)
     plt.title(f"{value_name} per epoch at bn{bn}")
     plt.legend()
-    plt.savefig(f"{method}_{value_name}_bn{bn}.png")
+    plt.savefig(f"{PATH}/ch09/89/{method}_{value_name}_bn{bn}.png")
     plt.close()
 
 
 if __name__ == '__main__':
 
-    DEBUG = False
+    DEBUG = True
     if DEBUG:
         print('DEBUG mode')
 
-    METHOD = 'bert'
+    METHOD = 'canine'
 
     # 時間の計測開始
     start_time = time.time()
-
+    
     # seedの固定
     seed_everything(use_torch=True)
+
+    # tokenizerの読み込み
+    tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
 
     # Colab
     # PATH = '/content/drive/MyDrive/NLP100'
@@ -208,8 +206,6 @@ if __name__ == '__main__':
     y_train = train['CATEGORY'].map(cat_id_dict)
     y_test = test['CATEGORY'].map(cat_id_dict)
 
-    # tokenizerの読み込み
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     max_len = 10
     
     # datasetの作成
@@ -222,13 +218,13 @@ if __name__ == '__main__':
     DROP_RATE = 0.4
     OUTPUT_SIZE = 4
     BATCH_SIZE = 32
-    NUM_EPOCHS = 10
+    NUM_EPOCHS = 30
     if DEBUG:
         NUM_EPOCHS = 2
     LEARNING_RATE = 2e-5
 
     # モデルの定義
-    model = BERTClass(DROP_RATE, OUTPUT_SIZE).to(device)
+    model = DistilBertClass(DROP_RATE, OUTPUT_SIZE).to(device)
 
     # criterion, optimizerの設定
     criterion = nn.CrossEntropyLoss()
