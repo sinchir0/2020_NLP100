@@ -2,7 +2,46 @@
 
 import gensim
 import numpy as np
-from NLP100.util import load_data, preprocess
+import pandas as pd
+import texthero as hero
+
+
+def load_data(data_check=False) -> dict:
+    """データの読み込み"""
+    # 読み込むファイルを定義
+    inputs = {
+        "train": "../../ch06/50/train.txt",
+        "valid": "../../ch06/50/valid.txt",
+        "test": "../../ch06/50/test.txt",
+    }
+
+    dfs = {}
+    for k, v in inputs.items():
+        dfs[k] = pd.read_csv(v, sep="\t", index_col=0)
+
+    # データチェック
+    if data_check:
+        for k in inputs.keys():
+            print(k, "---", dfs[k].shape)
+            print(dfs[k].head())
+
+    return dfs
+
+
+def preprocess(text: str) -> str:
+    """前処理"""
+    clean_text = hero.clean(
+        text,
+        pipeline=[
+            hero.preprocessing.fillna,
+            hero.preprocessing.lowercase,
+            hero.preprocessing.remove_digits,
+            hero.preprocessing.remove_punctuation,
+            hero.preprocessing.remove_diacritics,
+            hero.preprocessing.remove_stopwords,
+        ],
+    )
+    return clean_text
 
 
 def get_mean_vector(model, sentence: list):
