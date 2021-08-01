@@ -1,4 +1,4 @@
-# 75. 損失と正解率のプロット
+# 76. チェックポイント
 
 import matplotlib.pyplot as plt
 import numpy as np
