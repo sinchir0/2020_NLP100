@@ -14,14 +14,14 @@ if __name__ == "__main__":
     df = pd.read_json("../20/jawiki-country.json.gz", lines=True)
     uk_text = df.query('title=="イギリス"')["text"].values[0]
     uk_texts = uk_text.split("\n")
-    
-    pattern = re.compile(r'(==+)(.*)(==+)')
+
+    pattern = re.compile(r"(==+)(.*)(==+)")
 
     for txt in uk_texts:
         m = re.match(pattern, txt)
         if m:
             match_txt = pattern.match(txt).groups()
-            print(''.join(match_txt), len(match_txt[0]) - 1)
+            print("".join(match_txt), len(match_txt[0]) - 1)
             # ==国名== 1
             # ==歴史== 1
             # ==地理== 1
@@ -77,4 +77,3 @@ if __name__ == "__main__":
             # ==脚注== 1
             # ==関連項目== 1
             # ==外部リンク== 1
-

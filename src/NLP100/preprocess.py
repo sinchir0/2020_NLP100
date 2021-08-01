@@ -169,8 +169,4 @@ def clean_text(text: str) -> str:
     text = normalize_unicodedata(text)
     text = normalize_neologdn(text)
     text = normalize_number(text)
-<<<<<<< HEAD:src/preprocess.py
     return text
-=======
-    return text
->>>>>>> 16dafcaa09f28883e75f23c09ab0bdb064b2d4e0:src/NLP100/preprocess.py
