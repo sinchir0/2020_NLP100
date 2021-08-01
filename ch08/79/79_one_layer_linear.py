@@ -1,7 +1,6 @@
 # 79. 多層ニューラルネットワーク
 # 問題78のコードを改変し，バイアス項の導入や多層化など，ニューラルネットワークの形状を変更しながら，高性能なカテゴリ分類器を構築せよ．
 
-import time
 from typing import Union
 
 import matplotlib.pyplot as plt
