@@ -1,14 +1,13 @@
 import spacy
+from ipdb import set_trace as st
 from tqdm import tqdm
 
-from ipdb import set_trace as st
-
 if __name__ == "__main__":
-    nlp = spacy.load('en_core_web_sm')
+    nlp = spacy.load("en_core_web_sm")
 
     # input_filename = 'kftt-data-1.0/data/orig/kyoto-train.en'
     # input_filename = 'kftt-data-1.0/data/orig/kyoto-dev.en'
-    input_filename = 'kftt-data-1.0/data/orig/kyoto-test.en'
+    input_filename = "kftt-data-1.0/data/orig/kyoto-test.en"
 
     wakati_line = []
 
@@ -29,12 +28,12 @@ if __name__ == "__main__":
     for line in tqdm(all_list):
         line_spacy = nlp(line)
         line_list = [str(word) for word in line_spacy]
-        wakati_txt = ' '.join(line_list)
+        wakati_txt = " ".join(line_list)
         wakati_line.append(wakati_txt)
-    
+
     # output_filename = 'train.spacy.en'
     # output_filename = 'dev.spacy.en'
-    output_filename = 'test.spacy.en'
+    output_filename = "test.spacy.en"
 
-    with open(output_filename, mode='wt') as f:
+    with open(output_filename, mode="wt") as f:
         f.writelines(wakati_line)

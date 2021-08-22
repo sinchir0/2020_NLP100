@@ -1,0 +1,1 @@
+fairseq-score --sys 95.out.spacy --ref test.spacy.en

@@ -1,5 +1,3 @@
-# [ToDO]で書いてあることをとりあえずやる
-# 
 # 91. 機械翻訳モデルの訓練
 # 90で準備したデータを用いて，ニューラル機械翻訳のモデルを学習せよ（ニューラルネットワークのモデルはTransformerやLSTMなど適当に選んでよい）
 
@@ -9,9 +7,6 @@
 
 from __future__ import unicode_literals, print_function, division
 from io import open
-import unicodedata
-import string
-import re
 import random
 
 from tqdm import tqdm
@@ -36,7 +31,6 @@ from ipdb import set_trace as st
 #Global変数の定義
 MAX_LENGTH = 30
 
-# [ToDO]SOSとEOSに該当するものが何か調べる
 # SOS_token, EOS_tokenとして文章の最初と最後に追加している
 class Lang:
     def __init__(self, name):
@@ -336,8 +330,10 @@ def trainIters(encoder, decoder, n_iters, print_every=1000, plot_every=100, lear
     encoder_optimizer = optim.SGD(encoder.parameters(), lr=learning_rate)
     decoder_optimizer = optim.SGD(decoder.parameters(), lr=learning_rate)
     # 75000回、適当にペアを選ぶ。
-    training_pairs = [tensorsFromPair(random.choice(pairs))
-                    for i in range(n_iters)]
+    # training_pairs = [tensorsFromPair(random.choice(pairs))
+    #                for i in range(n_iters)]
+    training_pairs = [tensorsFromPair(pair)
+                    for pair in pairs]
     # training_pairsはlist
     # training_pairs[0]はtensorのtuple
     # 多分engとfraのペアのtensor
@@ -462,7 +458,7 @@ def evaluateAndShowAttention(input_sentence: str, n_iters: int):
 
 if __name__ == "__main__":
 
-    N_ITERS = 50
+    N_ITERS = 5
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f'Use {device}')
@@ -486,7 +482,8 @@ if __name__ == "__main__":
     teacher_forcing_ratio = 0.5
 
     hidden_size = 256
-    encoder1 = EncoderRNN(input_lang.n_words, hidden_size).to(device)
+    #+1は未知語用のidx
+    encoder1 = EncoderRNN(input_lang.n_words+1, hidden_size).to(device)
     attn_decoder1 = AttnDecoderRNN(hidden_size, output_lang.n_words, dropout_p=0.1).to(device)
 
     trainIters(encoder1, attn_decoder1, n_iters=N_ITERS, print_every=5, plot_every=5)
@@ -500,3 +497,19 @@ if __name__ == "__main__":
     evaluateAndShowAttention("備中国に生まれ 、京都・相国寺に入ってから周防国に移る。", N_ITERS)
 
     evaluateAndShowAttention("その後遣明使に随行して中国（明）に渡って中国の水墨画を学んだ。", N_ITERS)
+
+    # N_ITERS = 10000
+    # input = 諱 は 「 等 楊 （ とう よう ） 」 、 もしくは 「 拙 宗 （ せっしゅう ） 」 と 号 し た 。
+    # output = " ( , ' ) ' , ' the <EOS>
+    # input = 備中 国 に 生まれ 、 京都 ・ 相国寺 に 入っ て から 周防 国 に 移る 。
+    # output = On February , , the and in the and and of , and the  <EOS>
+    # input = その後 遣 明 使 に 随行 し て 中国 （ 明 ） に 渡っ て 中国 の 水墨 画 を 学ん だ 。
+    # output = In , he was a and and and the of and . <EOS>
+
+    # N_ITERS = 50000
+    # input = 諱 は 「 等 楊 （ とう よう ） 」 、 もしくは 「 拙 宗 （ せっしゅう ） 」 と 号 し た 。
+    # output = " ( , ' ) ' , ' the <EOS>
+    # input = 備中 国 に 生まれ 、 京都 ・ 相国寺 に 入っ て から 周防 国 に 移る 。
+    # output = On February , , the and in the and and of , and the  <EOS>
+    # input = その後 遣 明 使 に 随行 し て 中国 （ 明 ） に 渡っ て 中国 の 水墨 画 を 学ん だ 。
+    # output = In , he was a and and and the of and . <EOS>
