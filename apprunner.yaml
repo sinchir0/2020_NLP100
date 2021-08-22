@@ -1,0 +1,10 @@
+version: 1.0
+runtime: python3
+build:
+ commands:
+  build:
+  - poetry install
+run:
+ command: uvicorn api:app --reload
+ network:
+   port: 8000
