@@ -1,5 +1,7 @@
+import MeCab
 from fastapi import FastAPI
 from pydantic import BaseModel
+
 from translate import translate_api
 
 app = FastAPI()
@@ -16,5 +18,6 @@ def read_root():
 
 @app.post("/predict")
 def translate(sentence: Sentence):
-    print(sentence.text)
-    return translate_api(sentence.text)
+    mecab = MeCab.Tagger("-Owakati")
+    parse_text = mecab.parse(sentence.text)
+    return translate_api(parse_text)
