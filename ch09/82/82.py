@@ -222,9 +222,7 @@ if __name__ == "__main__":
     dataset_test = TextDataset(test["TITLE"], test["CATEGORY"])
 
     # parameterの更新
-    # BATCHSIZE = 1
-    # BATCHSIZE = 32
-    BATCHSIZE = train.shape[0]
+    BATCHSIZE = 1
     dataloader_train = DataLoader(
         dataset_train, batch_size=BATCHSIZE, shuffle=False, drop_last=True
     )
